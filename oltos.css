@@ -14,7 +14,7 @@ ul.gallery li {
   display: inline;
   list-style: none;
   width: 150px;
-  min-height: 125px;
+  min-height: 200px;
   float: left;
   text-align: center;
 

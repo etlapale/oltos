@@ -54,6 +54,12 @@ if __name__ == '__main__':
 	    tho = join(args.thumbs, basename(f))
 	    if not exists(tho):
 	      img.thumbnail((int(args.thsz), int(args.thsz)))
+	      # Rotate the thumb
+	      if 'Orientation' in exif:
+	          if exif['Orientation'] == 6:
+		      img = img.rotate(-90)
+	          elif exif['Orientation'] == 8:
+		      img = img.rotate(90)
 	      img.save(tho)
 	    # Add the image to the list
 	    images.append((f, exif, tho))
