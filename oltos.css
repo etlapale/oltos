@@ -1,0 +1,38 @@
+@charset "UTF-8";
+
+html, body {
+    color: white;
+    background: black;
+    font-size: 12pt;
+    font-family: sans-serif;
+}
+
+ul.gallery {
+}
+
+ul.gallery li {
+  display: inline;
+  list-style: none;
+  width: 150px;
+  min-height: 125px;
+  float: left;
+  text-align: center;
+
+  background-color: #1b1d1e;
+  margin: 1em;
+  padding: .5em;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+}
+
+ul.gallery li a img {
+  border: 0;
+}
+
+ul.gallery li .details {
+  margin: .5em;
+  margin-top: 1em;
+  font-size: 75%;
+  text-align: left;
+}

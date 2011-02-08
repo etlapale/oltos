@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Olivier Lucas Juan Tlapale Stalder</title>
+    <link href="oltos.css" type="text/css" rel="stylesheet" media="screen" />
+  </head>
+  <body>
+    <h1>Olivier Lucas Juan Tlapale Stalder</h1>
+    <ul class="gallery">
+    % for img in images:
+      <li>
+        <a href="${img[0]}">
+	  <img src="${img[2]}" />
+	</a>
+        <div class="details">
+	  ${img[1]['DateTime']}
+	</div>
+      </li>
+    % endfor
+    </ul>
+  </body>
+</html>
