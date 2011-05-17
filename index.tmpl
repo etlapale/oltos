@@ -7,6 +7,15 @@
   </head>
   <body>
     <h1>Olivier Lucas Juan Tlapale Stalder</h1>
+    <div>
+    % for i in monthes:
+      % if i == last:
+          <a href="index.html">${i}</a>
+      % else:
+          <a href="${i}.html">${i}</a>
+      % endif
+    % endfor
+    </div>
     <ul class="gallery">
     % for img in images:
       <li>

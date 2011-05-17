@@ -68,13 +68,41 @@ if __name__ == '__main__':
     # Order the images by date
     def exif_date(img):
         return img[1]['DateTime']
-    images.sort(key=exif_date)
+    images.sort(key=exif_date, reverse=True)
 
-    # Generate the webpage
-    tmpl = Template(filename=args.tmpl, input_encoding='utf-8', output_encoding='utf-8')
-    env = {'images': images}
-    data = tmpl.render(**env)
-    #fp = codecs.open('index.html', 'w', 'utf-8')
-    fp = open('index.html', 'w')
-    fp.write(data)
-    fp.close()
+    # Seperate the images by month
+    monthes = {}
+    last = None
+    idx = []
+    for img in images:
+        month = img[1]['DateTime'][:7].replace(':', '-')
+        # Store monthes indexes
+        if not month in idx:
+            idx.append(month)
+        # Organise the images
+        if not month in monthes:
+            monthes[month] = [img]
+        else:
+            monthes[month].append(img)
+        # Store the last month
+        if month > last:
+            last = month
+    idx.sort(reverse=True)
+
+    # Generate the webpages
+    for month in monthes:
+        # Configure the generation
+        if month == last:
+            path = 'index.html'
+        else:
+            path = month + '.html'
+        images = monthes[month]
+        # Gernerate the page
+        tmpl = Template(filename=args.tmpl, input_encoding='utf-8',
+                output_encoding='utf-8')
+        env = {'images': images, 'monthes': idx, 'last': last}
+        data = tmpl.render(**env)
+        #fp = codecs.open('index.html', 'w', 'utf-8')
+        fp = open(path, 'w')
+        fp.write(data)
+        fp.close()
