@@ -28,11 +28,11 @@ if __name__ == '__main__':
 
     if args.tmpl is None:
         if exists('index.tmpl'):
-	    args.tmpl = 'index.tmpl'
-	elif exists(join(dirname(argv[0]), 'index.tmpl')):
-	    args.tmpl = join(dirname(argv[0]), 'index.tmpl')
-	else:
-	    exit('No template file found')
+            args.tmpl = 'index.tmpl'
+        elif exists(join(dirname(argv[0]), 'index.tmpl')):
+            args.tmpl = join(dirname(argv[0]), 'index.tmpl')
+        else:
+            exit('No template file found')
 
     # Create thumbnails directory
     if not exists(args.thumbs):
@@ -42,28 +42,34 @@ if __name__ == '__main__':
     images = []
     for f in listdir(args.indir):
         if splitext(f)[1] in ['.JPG']:
-	    # Fetch EXIF tags
-	    img = Image.open(f)
-	    img.path = f
-	    exif = {}
-	    info = img._getexif()
-	    for tag, value in info.items():
-	        decoded = TAGS.get(tag, tag)
-	        exif[decoded] = value
-	    # Create a thumbnail
-	    tho = join(args.thumbs, basename(f))
-	    if not exists(tho):
-	      img.thumbnail((int(args.thsz), int(args.thsz)))
-	      # Rotate the thumb
-	      if 'Orientation' in exif:
-	          if exif['Orientation'] == 6:
-		      img = img.rotate(-90)
-	          elif exif['Orientation'] == 8:
-		      img = img.rotate(90)
-	      img.save(tho)
-	    # Add the image to the list
-	    images.append((f, exif, tho))
-	    del img
+            # Fetch EXIF tags
+            img = Image.open(f)
+            img.path = f
+            exif = {}
+            info = img._getexif()
+            for tag, value in info.items():
+                decoded = TAGS.get(tag, tag)
+                exif[decoded] = value
+            # Create a thumbnail
+            tho = join(args.thumbs, basename(f))
+            if not exists(tho):
+              try:
+                img.thumbnail((int(args.thsz), int(args.thsz)))
+              except IOError:
+                print('Skipping broken: %s' % img.path)
+                continue
+              # Rotate the thumb
+              if 'Orientation' in exif:
+                  if exif['Orientation'] == 6:
+                      img = img.rotate(-90)
+                  elif exif['Orientation'] == 8:
+                      img = img.rotate(90)
+              img.save(tho)
+            img = Image.open(tho)
+            # Add the image to the list
+            width, height = img.size
+            images.append((f, exif, tho, width, height))
+            del img
 
     # Order the images by date
     def exif_date(img):
