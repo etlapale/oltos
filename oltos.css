@@ -2,37 +2,64 @@
 
 html, body {
     color: white;
-    background: black;
+    background: #222228;
     font-size: 12pt;
     font-family: sans-serif;
 }
 
-ul.gallery {
+.gallery {
+  margin-top: 2ex;
+  margin-bottom: 2ex;
+  margin-left: auto;
+  margin-right: auto;
+  width: 800px;
+  background: #cccccc;
+  padding: 1ex;
 }
 
-ul.gallery li {
-  display: inline;
-  list-style: none;
-  width: 150px;
-  min-height: 200px;
-  float: left;
+.gallery .header {
+  margin-bottom: 2ex;
+  color: #222222;
+}
+
+.gallery .header h1 {
+  font-size: 125%;
+}
+
+.gallery .info {
   text-align: center;
-
-  background-color: #1b1d1e;
-  margin: 1em;
-  padding: .5em;
-  border-radius: 10px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
+  color: black;
+  font-size: 75%;;
 }
 
-ul.gallery li a img {
-  border: 0;
-}
-
-ul.gallery li .details {
-  margin: .5em;
-  margin-top: 1em;
+.gallery .info #metadata {
   font-size: 75%;
-  text-align: left;
+}
+
+.scroll {
+  overflow: hidden;
+}
+
+.scrollable {
+  margin-top: 0;
+  background: #888888;
+
+  white-space: nowrap;
+  padding: 0;
+
+  float: left;
+}
+
+.scrollable img {
+  margin: 0;
+  padding: 0;
+  opacity: 0.4;
+}
+
+.scrollable img:hover {
+  opacity: 1.0;
+}
+
+.displayer {
+  padding: 0;
 }

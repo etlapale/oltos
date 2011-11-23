@@ -16,11 +16,14 @@ from mako.template import Template
 
 if __name__ == '__main__':
     ap = ArgumentParser(description='Generate a gallery')
+    ap.add_argument('--force-thumbnail', dest='force_thumbnail', default=False,
+        action='store_true',
+        help='Force thumbnail generation')
     ap.add_argument('--input-dir', dest='indir', default='.',
         help='Input images directory')
     ap.add_argument('--template', dest='tmpl', default=None,
         help='Template HTML page')
-    ap.add_argument('--thumb-size', dest='thsz', default='128',
+    ap.add_argument('--thumb-size', dest='thsz', default='96',
         help='Thumbnails directory')
     ap.add_argument('--thumbnails', dest='thumbs', default='thumbs',
         help='Thumbnails directory')
@@ -52,9 +55,15 @@ if __name__ == '__main__':
                 exif[decoded] = value
             # Create a thumbnail
             tho = join(args.thumbs, basename(f))
-            if not exists(tho):
+            if args.force_thumbnail or not exists(tho):
               try:
-                img.thumbnail((int(args.thsz), int(args.thsz)))
+                if 'Orientation' in exif and exif['Orientation'] in [6,8]:
+                  ratio = float(img.size[0])/float(args.thsz)
+                else:
+                  ratio = float(img.size[1])/float(args.thsz)
+                img.thumbnail((int(img.size[0]/ratio),
+                  int(img.size[1]/ratio)))
+                #img.thumbnail((int(args.thsz), int(args.thsz)))
               except IOError:
                 print('Skipping broken: %s' % img.path)
                 continue

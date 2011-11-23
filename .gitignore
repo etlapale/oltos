@@ -1,0 +1,5 @@
+tests/*.JPG
+tests/*.html
+*.swp
+tests/*.AVI
+tests/*.NEF
