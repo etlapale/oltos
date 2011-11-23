@@ -13,6 +13,10 @@ function mypreview(id) {
 
 // Scrollable mouse handler
 window.onload = function () {
+  // Init
+  var preview = $(".preview")[0];
+  preview.current = 0;
+
   var debug = $("#debug");
   var scroll = $(".scrollable");
   scroll.offx = 0;
@@ -24,7 +28,7 @@ window.onload = function () {
     //var x = e.pageX - this.offsetLeft + scroll.offset;
     var x = e.pageX - this.offsetLeft - scroll.offx;
 
-    var pos = x / realwidth * scroll.width();
+    var pos = x / realwidth * (scroll.width() - realwidth);
     if (pos + realwidth > scroll.width())
       pos = scroll.width() - realwidth;
     if (pos < 0)
@@ -38,6 +42,32 @@ window.onload = function () {
     scroll.css("margin-left", "-" + pos + "px");
   });
 };
+
+function previous() {
+  var preview = $(".preview")[0];
+  if (preview.current > 0)
+    mypreview(preview.current - 1);
+}
+
+function next() {
+  var preview = $(".preview")[0];
+  if (preview.current < medias.length - 1)
+    mypreview(preview.current + 1);
+}
+
+function onkeyup(e) {
+  if (e = e ? e : window.event ? event : null) {
+    if (e.keyCode == 37)
+      previous();
+    else if (e.keyCode == 39)
+      next();
+  }
+}
+
+if (document.addEventListener)
+  document.addEventListener("keyup", onkeyup, false);
+else
+  document.onkeyup = onkeyup;
 //
 	/*
 	var scrollbar = $( ".scrollbar" ).slider({
