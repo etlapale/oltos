@@ -26,6 +26,21 @@ html, body {
   font-size: 125%;
 }
 
+.gallery .header a[href] {
+  border: 0;
+  text-decoration: none;
+  background: #77777f;
+  padding: .4ex;
+  font-weight: bold;
+  font-size: 75%;
+  color: #cccccc;
+  border-radius: 1ex;
+}
+
+.gallery .header a[href]:hover {
+  background: #ff6c00;
+}
+
 .gallery .info {
   text-align: center;
   color: black;
