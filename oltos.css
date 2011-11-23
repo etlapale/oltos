@@ -12,9 +12,15 @@ html, body {
   margin-bottom: 2ex;
   margin-left: auto;
   margin-right: auto;
-  width: 800px;
+  /*width: 800px;*/
+  width: 70%;
   background: #cccccc;
   padding: 1ex;
+  width: 800px;
+}
+
+.gallery .displayer {
+  text-align: center;
 }
 
 .gallery .header {
@@ -44,7 +50,7 @@ html, body {
 .gallery .info {
   text-align: center;
   color: black;
-  font-size: 75%;;
+  font-size: 75%;
 }
 
 .gallery .info #metadata {

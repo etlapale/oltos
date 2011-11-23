@@ -2,7 +2,10 @@
 function mypreview(id) {
   var preview = $(".preview")[0];
   //var thumb = $( "#thumb-" + id )[0];
-  preview.src = medias[id].preview;
+  preview.src = "preview/" + medias[id].preview;
+  var prevlink = $("#prevlink")[0];
+  prevlink.href = medias[id].preview;
+
   preview.current = id;
 
   var name = $(".info #name")[0];

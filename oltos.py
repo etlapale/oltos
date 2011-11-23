@@ -23,8 +23,10 @@ if __name__ == '__main__':
         help='Input images directory')
     ap.add_argument('--template', dest='tmpl', default=None,
         help='Template HTML page')
+    ap.add_argument('--preview-size', dest='prsz', default='528',
+        help='Preview size')
     ap.add_argument('--thumb-size', dest='thsz', default='96',
-        help='Thumbnails directory')
+        help='Thumbnails size')
     ap.add_argument('--thumbnails', dest='thumbs', default='thumbs',
         help='Thumbnails directory')
     args = ap.parse_args()
@@ -53,14 +55,14 @@ if __name__ == '__main__':
             for tag, value in info.items():
                 decoded = TAGS.get(tag, tag)
                 exif[decoded] = value
-            # Create a thumbnail
-            tho = join(args.thumbs, basename(f))
+            # Create a preview (big thumbnail)
+            tho = join('preview', basename(f))
             if args.force_thumbnail or not exists(tho):
               try:
                 if 'Orientation' in exif and exif['Orientation'] in [6,8]:
-                  ratio = float(img.size[0])/float(args.thsz)
+                  ratio = float(img.size[0])/float(args.prsz)
                 else:
-                  ratio = float(img.size[1])/float(args.thsz)
+                  ratio = float(img.size[1])/float(args.prsz)
                 img.thumbnail((int(img.size[0]/ratio),
                   int(img.size[1]/ratio)))
                 #img.thumbnail((int(args.thsz), int(args.thsz)))
@@ -73,6 +75,18 @@ if __name__ == '__main__':
                       img = img.rotate(-90)
                   elif exif['Orientation'] == 8:
                       img = img.rotate(90)
+              img.save(tho)
+            # Create a thumbnail
+            tho = join(args.thumbs, basename(f))
+            if args.force_thumbnail or not exists(tho):
+              try:
+                ratio = float(img.size[1])/float(args.thsz)
+                img.thumbnail((int(img.size[0]/ratio),
+                  int(img.size[1]/ratio)))
+                #img.thumbnail((int(args.thsz), int(args.thsz)))
+              except IOError:
+                print('Skipping broken: %s' % img.path)
+                continue
               img.save(tho)
             img = Image.open(tho)
             # Add the image to the list
