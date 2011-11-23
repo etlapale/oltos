@@ -27,9 +27,9 @@
 	<div>
 	% for i in monthes:
 	  % if i == last:
-	      <a href="index.html">${i}</a>
+	      <a ${'class="current"' if i == current else ""} href="index.html">${i}</a>
 	  % else:
-	      <a href="${i}.html">${i}</a>
+	      <a ${'class="current"' if i == current else ""} href="${i}.html">${i}</a>
 	  % endif
 	% endfor
 	</div>

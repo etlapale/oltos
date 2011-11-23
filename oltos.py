@@ -129,7 +129,7 @@ if __name__ == '__main__':
         # Gernerate the page
         tmpl = Template(filename=args.tmpl, input_encoding='utf-8',
                 output_encoding='utf-8')
-        env = {'images': images, 'monthes': idx, 'last': last}
+        env = {'images': images, 'monthes': idx, 'current': month, 'last': last}
         data = tmpl.render(**env)
         #fp = codecs.open('index.html', 'w', 'utf-8')
         fp = open(path, 'w')

@@ -43,6 +43,10 @@ html, body {
   border-radius: 1ex;
 }
 
+.gallery .header a[href].current {
+  color: #f0a080;
+}
+
 .gallery .header a[href]:hover {
   background: #ff6c00;
 }
