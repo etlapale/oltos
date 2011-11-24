@@ -1,12 +1,21 @@
 // Image selected for preview
 function mypreview(id) {
+  // Make sure the previous video is stopped
+  var vid = $("#prevvideo");
+  //for (int i = 0; vid && i < vid.length; i++)
+  if (vid && vid.length)
+    vid[0].pause ();
+
   // Make sure we are in the correct mode
   var media = medias[id];
   //var displayer = $(".displayer")[0];
   if ($(".displayer")[0].mode != media.type) {
     if (media.type == "video") {
-      $("#prevvideo").remove ();
-      $(".displayer").append("<video autoplay id=\"prevvideo\" src=\"" + media.name + "\" controls>Video not supported.</video>");
+      // Remove the video object
+      if (vid)
+	vid.remove();
+      //$(".displayer").append("<video autoplay id=\"prevvideo\" src=\"" + media.name + "\" controls>Video not supported.</video>");
+      $(".displayer").append("<video autoplay id=\"prevvideo\" controls>Video not supported.</video>");
       $("#preview").remove ();
     }
     else if (media.type == "photo") {
@@ -16,16 +25,19 @@ function mypreview(id) {
     $(".displayer")[0].mode = media.type;
   }
   
-  var preview = $("#preview")[0];
-  //var thumb = $( "#thumb-" + id )[0];
-  preview.src = "preview/" + media.preview;
-
   if (media.type == "photo") {
+    var preview = $("#preview")[0];
+    //var thumb = $( "#thumb-" + id )[0];
+    preview.src = "preview/" + media.preview;
+
     var prevlink = $("#prevlink")[0];
     prevlink.href = media.preview;
-  }
 
-  preview.current = id;
+    preview.current = id;
+  }
+  else if (media.type == "video") {
+    $("#prevvideo").attr("src", media.name);
+  }
 
   var name = $(".info #name")[0];
   name.innerHTML = media.name;
