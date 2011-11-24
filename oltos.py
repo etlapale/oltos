@@ -176,10 +176,16 @@ if __name__ == '__main__':
         else:
             path = month + '.html'
         images = monthes[month]
+        # Get the first image
+        first = 0
+        for i,img in enumerate(images):
+          if img[5] == 'photo':
+            first = i
+            break
         # Gernerate the page
         tmpl = Template(filename=args.tmpl, input_encoding='utf-8',
                 output_encoding='utf-8')
-        env = {'images': images, 'monthes': idx, 'current': month, 'last': last}
+        env = {'images': images, 'monthes': idx, 'first': first, 'current': month, 'last': last}
         data = tmpl.render(**env)
         #fp = codecs.open('index.html', 'w', 'utf-8')
         fp = open(path, 'w')

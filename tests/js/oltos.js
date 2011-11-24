@@ -3,8 +3,9 @@ function mypreview(id) {
   // Make sure we are in the correct mode
   var media = medias[id];
   //var displayer = $(".displayer")[0];
-  if ($(".displayer").mode != media.type) {
+  if ($(".displayer")[0].mode != media.type) {
     if (media.type == "video") {
+      $("#prevvideo").remove ();
       $(".displayer").append("<video autoplay id=\"prevvideo\" src=\"" + media.name + "\" controls>Video not supported.</video>");
       $("#preview").remove ();
     }
