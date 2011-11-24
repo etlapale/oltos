@@ -14,7 +14,8 @@
             name:     "${img[0]}",
             preview:  "${img[0]}",
             datetime: "${img[1]['DateTime']}",
-            width:    ${img[3]}
+            width:    ${img[3]},
+            type:     "${img[5]}"
           },
         % endfor
       ];
@@ -36,7 +37,7 @@
       </div>
 
       <div class="displayer">
-	<a id="prevlink" href="${images[0][0]}"><img class="preview" src="preview/${images[0][0]}" /></a>
+	<a id="prevlink" href="${images[0][0]}"><img id="preview" src="preview/${images[0][0]}" /></a>
       </div>
 
       <div class="info">

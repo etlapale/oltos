@@ -4,8 +4,9 @@
 
 from argparse import ArgumentParser
 import codecs
-from os import listdir, mkdir
+from os import listdir, mkdir, system
 from os.path import basename, dirname, exists, join, splitext
+import re
 from sys import argv
 
 from PIL import Image
@@ -46,6 +47,55 @@ if __name__ == '__main__':
     # List input images
     images = []
     for f in listdir(args.indir):
+        base, ext = splitext(f)
+        # Movies
+        if ext in ['.AVI']:
+          # Fetch date
+          fp = open(f, 'rb')
+          data = fp.read(2048)
+          fp.close()
+          m = re.search('[0-9]{4}:[0-9]{2}:[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}', data)
+          del data
+          if m is None:
+            continue
+          exif = {'DateTime': m.group(0)}
+          # Create a preview (big thumbnail)
+          tho = join('preview', basename(f) + '.png')
+          if True:
+            system('mplayer %s -ao null -vo png -frames 1' % f)
+            img = Image.open('00000001.png')
+            try:
+              ratio = float(img.size[1])/float(args.prsz)
+              img.thumbnail((int(img.size[0]/ratio),
+                int(img.size[1]/ratio)))
+            except IOError:
+              print('Skipping broken: %s' % img.path)
+              continue
+            img.save(tho)
+            tho = join('thumbs', basename(f) + '.png')
+            try:
+              ratio = float(img.size[1])/float(args.thsz)
+              img.thumbnail((int(img.size[0]/ratio),
+                int(img.size[1]/ratio)))
+              #img.thumbnail((int(args.thsz), int(args.thsz)))
+            except IOError:
+              print('Skipping broken: %s' % img.path)
+              continue
+            # Add a video visual marker
+            play = Image.open('../play.png')
+            img.paste(play, ((img.size[0]-play.size[0])/2,
+              (img.size[1]-play.size[1])/2),
+              play)
+            img.save(tho)
+            img = Image.open(tho)
+            # Add the image to the list
+            width, height = img.size
+            # Create a thumbnail
+            images.append((base + '.ogv', exif, tho, width, height, 'video'))
+            # Warn if the formatted video does not exist
+            if not exists(base + '.ogv'):
+              print('You need to manually create ' + base + '.ogv')
+        # Photos
         if splitext(f)[1] in ['.JPG']:
             # Fetch EXIF tags
             img = Image.open(f)
@@ -91,7 +141,7 @@ if __name__ == '__main__':
             img = Image.open(tho)
             # Add the image to the list
             width, height = img.size
-            images.append((f, exif, tho, width, height))
+            images.append((f, exif, tho, width, height, 'photo'))
             del img
 
     # Order the images by date

@@ -1,24 +1,43 @@
 // Image selected for preview
 function mypreview(id) {
-  var preview = $(".preview")[0];
+  // Make sure we are in the correct mode
+  var media = medias[id];
+  //var displayer = $(".displayer")[0];
+  if ($(".displayer").mode != media.type) {
+    if (media.type == "video") {
+      $(".displayer").append("<video autoplay id=\"prevvideo\" src=\"" + media.name + "\" controls>Video not supported.</video>");
+      $("#preview").remove ();
+    }
+    else if (media.type == "photo") {
+      $("#prevlink").append("<img id=\"preview\" src=\"\" />");
+      $("#prevvideo").remove ();
+    }
+    $(".displayer")[0].mode = media.type;
+  }
+  
+  var preview = $("#preview")[0];
   //var thumb = $( "#thumb-" + id )[0];
-  preview.src = "preview/" + medias[id].preview;
-  var prevlink = $("#prevlink")[0];
-  prevlink.href = medias[id].preview;
+  preview.src = "preview/" + media.preview;
+
+  if (media.type == "photo") {
+    var prevlink = $("#prevlink")[0];
+    prevlink.href = media.preview;
+  }
 
   preview.current = id;
 
   var name = $(".info #name")[0];
-  name.innerHTML = medias[id].name;
+  name.innerHTML = media.name;
   var meta = $(".info #metadata")[0];
-  meta.innerHTML = medias[id].datetime;
+  meta.innerHTML = media.datetime;
 }
 
 // Scrollable mouse handler
 window.onload = function () {
   // Init
-  var preview = $(".preview")[0];
+  var preview = $("#preview")[0];
   preview.current = 0;
+  $(".displayer")[0].mode = 'photo';
 
   var debug = $("#debug");
   var scroll = $(".scrollable");
@@ -47,13 +66,13 @@ window.onload = function () {
 };
 
 function previous() {
-  var preview = $(".preview")[0];
+  var preview = $("#preview")[0];
   if (preview.current > 0)
     mypreview(preview.current - 1);
 }
 
 function next() {
-  var preview = $(".preview")[0];
+  var preview = $("#preview")[0];
   if (preview.current < medias.length - 1)
     mypreview(preview.current + 1);
 }
