@@ -49,7 +49,7 @@ if __name__ == '__main__':
     for f in listdir(args.indir):
         base, ext = splitext(f)
         # Movies
-        if ext in ['.AVI']:
+        if ext in ['.AVI', '.MOV']:
           # Fetch date
           fp = open(f, 'rb')
           data = fp.read(2048)
@@ -96,7 +96,7 @@ if __name__ == '__main__':
             if not exists(base + '.ogv'):
               print('You need to manually create ' + base + '.ogv')
         # Photos
-        if splitext(f)[1] in ['.JPG']:
+        if splitext(f)[1] in ['.jpg', '.JPG']:
             # Fetch EXIF tags
             img = Image.open(f)
             img.path = f
@@ -182,7 +182,7 @@ if __name__ == '__main__':
           if img[5] == 'photo':
             first = i
             break
-        # Gernerate the page
+        # Generate the page
         tmpl = Template(filename=args.tmpl, input_encoding='utf-8',
                 output_encoding='utf-8')
         env = {'images': images, 'monthes': idx, 'first': first, 'current': month, 'last': last}
