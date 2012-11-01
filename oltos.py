@@ -55,13 +55,13 @@ if __name__ == '__main__':
           data = fp.read(2048)
           fp.close()
           m = re.search('[0-9]{4}:[0-9]{2}:[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}', data)
-          del data
           if m is None:
             continue
           exif = {'DateTime': m.group(0)}
+          del data
           # Create a preview (big thumbnail)
           tho = join('preview', basename(f) + '.png')
-          if True:
+          if not exists (tho):
             system('mplayer %s -ao null -vo png -frames 1' % f)
             img = Image.open('00000001.png')
             try:
@@ -87,14 +87,15 @@ if __name__ == '__main__':
               (img.size[1]-play.size[1])/2),
               play)
             img.save(tho)
-            img = Image.open(tho)
-            # Add the image to the list
-            width, height = img.size
-            # Create a thumbnail
-            images.append((base + '.ogv', exif, tho, width, height, 'video'))
-            # Warn if the formatted video does not exist
-            if not exists(base + '.ogv'):
-              print('You need to manually create ' + base + '.ogv')
+          tho = join('thumbs', basename(f) + '.png')
+          img = Image.open(tho)
+          # Add the image to the list
+          width, height = img.size
+          # Create a thumbnail
+          images.append((base + '.ogv', exif, tho, width, height, 'video'))
+          # Warn if the formatted video does not exist
+          if not exists(base + '.ogv'):
+            print('You need to manually create ' + base + '.ogv')
         # Photos
         if splitext(f)[1] in ['.jpg', '.JPG']:
             # Fetch EXIF tags
