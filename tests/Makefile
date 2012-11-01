@@ -10,7 +10,7 @@ RFLAGS=-vz --size-only --progress
 all: sync
 
 sync: vids
-	rsync --copy-links $(RFLAGS) *.css *.html *.JPG *.jpg *.ogv $(SRV)/
+	rsync --copy-links $(RFLAGS) *.css *.txt *.html *.JPG *.jpg *.ogv $(SRV)/
 	rsync $(RFLAGS) $(THUMBS) $(SRV)/thumbs/
 	rsync $(RFLAGS) $(PREVIEW) $(SRV)/preview/
 
