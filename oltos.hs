@@ -1,3 +1,5 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 import Control.Applicative
 import Data.List
 import System.Directory
@@ -20,10 +22,12 @@ main = do
 listMedia :: IO [Media]
 listMedia = do
   img <- filter isImage <$> (getCurrentDirectory >>= getDirectoryContents)
-  mapM parseImage $ take 40 img
+  mapM parseImage img
 
 isImage = hasExt [".JPG", ".jpg"]
 isVideo = hasExt [".AVI", ".MOV"]
+
+hasExt :: [String] -> String -> Bool
 hasExt s x = any (`isSuffixOf` x) s
 
 parseImage :: FilePath -> IO Media
@@ -42,12 +46,22 @@ parseImage p = do
     wh <- getImageWidth w
     ht <- getImageHeight w
     let ratio = fromIntegral (if vert then wh else ht) / fromIntegral previewHeight
+    -- Unused background pixel color
+    bgCol <- pixelWand
+    setColor bgCol "black"
     magickIterate w $ \p -> do
       resizeImage p (floor $ fromIntegral wh / ratio)
                   (floor $ fromIntegral ht / ratio)
                   lanczosFilter 1.0
+      -- Rotate according to exif info
+      case orie of
+        "Left-bottom" -> rotateImage p bgCol (-90)
+        "Right-top" -> rotateImage p bgCol 90
+        otherwise -> return ()
+      -- Remove any metadata
+      stripImage w
       return ()
-    writeImages w (decodeString $ "previews/" ++ p) True
+    writeImages w (decodeString $ "preview/" ++ p) True
     return ()
   --Right img <- readImage p
   return $ Photo p time
