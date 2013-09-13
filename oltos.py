@@ -57,7 +57,7 @@ if __name__ == '__main__':
           m = re.search('[0-9]{4}:[0-9]{2}:[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}', data)
           if m is None:
             continue
-          exif = {'DateTime': m.group(0)}
+          exif = {'DateTimeOriginal': m.group(0)}
           del data
           # Create a preview (big thumbnail)
           tho = join('preview', basename(f) + '.png')
@@ -147,7 +147,7 @@ if __name__ == '__main__':
 
     # Order the images by date
     def exif_date(img):
-        return img[1]['DateTime']
+        return img[1]['DateTimeOriginal']
     images.sort(key=exif_date, reverse=True)
 
     # Seperate the images by month
@@ -155,7 +155,7 @@ if __name__ == '__main__':
     last = None
     idx = []
     for img in images:
-        month = img[1]['DateTime'][:7].replace(':', '-')
+        month = img[1]['DateTimeOriginal'][:7].replace(':', '-')
         # Store monthes indexes
         if not month in idx:
             idx.append(month)
