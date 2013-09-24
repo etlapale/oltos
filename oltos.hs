@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 import Control.Applicative
+import Control.Monad
 import Data.List
 import System.Directory
 
@@ -21,7 +22,7 @@ data Media = Photo { path :: FilePath
 
 main = do
   imgs <- filter isImage <$> (getCurrentDirectory >>= getDirectoryContents)
-  media <- mapM parseImage $ take 10 imgs
+  media <- mapM parseImage imgs
   -- Order the media from most recent to oldest
   let media' = sortBy (\a b -> compare (date b) (date a)) media
   hastacheStr defaultConfig (encodeStr template) (mkStrContext context) >>= LZ.putStrLn
@@ -41,39 +42,43 @@ parseImage p = do
   Just orie <- Exif.getTag exif "Orientation"
   let vert = orie `elem` ["Left-bottom", "Right-top"]
   let time = readTime defaultTimeLocale "%Y:%m:%d %T" date
+  let preview = "preview/" ++ p
+  previewExists <- doesFileExist preview
+  putStrLn $ "Preview exists: " ++ show previewExists
   -- Create large preview
   withMagickWandGenesis $ do
     (_,w) <- magickWand
     img <- readImage w $ decodeString p
-    wh <- getImageWidth w
-    ht <- getImageHeight w
-    let ratio = fromIntegral (if vert then wh else ht) / fromIntegral previewHeight
     -- Unused background pixel color
     bgCol <- pixelWand
     setColor bgCol "black"
-    magickIterate w $ \p -> do
-      resizeImage p (floor $ fromIntegral wh / ratio)
-                  (floor $ fromIntegral ht / ratio)
-                  lanczosFilter 1.0
-      -- Rotate according to exif info
-      case orie of
-        "Left-bottom" -> rotateImage p bgCol (-90)
-        "Right-top" -> rotateImage p bgCol 90
-        otherwise -> return ()
-      -- Remove any metadata
-      stripImage w
-      return ()
-    writeImages w (decodeString $ "previews/" ++ p) True
-    -- Create a thumbnail
-    wh <- getImageWidth w
-    ht <- getImageHeight w
-    let ratio = fromIntegral ht / fromIntegral thumbHeight
-    magickIterate w $ \p ->
-      resizeImage p (floor $ fromIntegral wh / ratio)
-                  (floor $ fromIntegral ht / ratio)
-                  lanczosFilter 1.0
-    writeImages w (decodeString $ "thumbs2/" ++ p) True
-    return ()
+    -- Create preview
+    when (not previewExists) $ do
+      wh <- getImageWidth w
+      ht <- getImageHeight w
+      let ratio = fromIntegral (if vert then wh else ht) / fromIntegral previewHeight
+      magickIterate w $ \p -> do
+        resizeImage p (floor $ fromIntegral wh / ratio)
+                    (floor $ fromIntegral ht / ratio)
+                    lanczosFilter 1.0
+        -- Rotate according to exif info
+        case orie of
+          "Left-bottom" -> rotateImage p bgCol (-90)
+          "Right-top" -> rotateImage p bgCol 90
+          otherwise -> return ()
+        -- Remove any metadata
+        stripImage w
+        return ()
+      writeImages w (decodeString preview) True
+      -- Create a thumbnail
+      wh <- getImageWidth w
+      ht <- getImageHeight w
+      let ratio = fromIntegral ht / fromIntegral thumbHeight
+      magickIterate w $ \p ->
+        resizeImage p (floor $ fromIntegral wh / ratio)
+                    (floor $ fromIntegral ht / ratio)
+                    lanczosFilter 1.0
+      writeImages w (decodeString $ "thumbs2/" ++ p) True
   --Right img <- readImage p
   return $ Photo p time
 
