@@ -4,7 +4,7 @@
 
 from argparse import ArgumentParser
 import codecs
-from os import listdir, mkdir, system
+from os import listdir, makedirs, mkdir, system, walk
 from os.path import abspath, basename, dirname, exists, join, splitext
 import re
 from sys import argv
@@ -17,11 +17,11 @@ from mako.template import Template
 
 if __name__ == '__main__':
     ap = ArgumentParser(description='Generate a gallery')
+    ap.add_argument('inputs', nargs='+',
+        help='Input photos or photo directories')
     ap.add_argument('--force-thumbnail', dest='force_thumbnail', default=False,
         action='store_true',
         help='Force thumbnail generation')
-    ap.add_argument('--input-dir', dest='indir', default='.',
-        help='Input images directory')
     ap.add_argument('--template', dest='tmpl', default=None,
         help='Template HTML page')
     ap.add_argument('--preview-size', dest='prsz', default='528',
@@ -32,6 +32,10 @@ if __name__ == '__main__':
         help='Thumbnails directory')
     ap.add_argument('--preview-dir', dest='previews', default='preview',
         help='Preview directory')
+    ap.add_argument('--photos-dir', dest='photos', default='photos',
+        help='photos directory')
+    ap.add_argument('-o', '--output', dest='output', default='album',
+        help='Output directory')
     args = ap.parse_args()
 
     # Base directory of the program
@@ -48,9 +52,10 @@ if __name__ == '__main__':
             exit('No template file found')
 
     # Create output directories
-    for path in [args.thumbs, args.previews]:
-        if not exists(path):
-            mkdir(path)
+    for path in [args.photos, args.thumbs, args.previews]:
+        makedirs(join(args.output, path))#, exist_ok=True)
+
+    exit()
 
     # List input images
     images = []
