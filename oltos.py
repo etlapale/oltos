@@ -5,7 +5,7 @@
 from argparse import ArgumentParser
 import codecs
 from os import listdir, mkdir, system
-from os.path import basename, dirname, exists, join, splitext
+from os.path import abspath, basename, dirname, exists, join, splitext
 import re
 from sys import argv
 
@@ -32,12 +32,17 @@ if __name__ == '__main__':
         help='Thumbnails directory')
     args = ap.parse_args()
 
+    # Base directory of the program
+    prog_base = abspath(dirname(argv[0]))
+
+    # Search for a web page template
     if args.tmpl is None:
-        if exists('index.tmpl'):
-            args.tmpl = 'index.tmpl'
-        elif exists(join(dirname(argv[0]), 'index.tmpl')):
-            args.tmpl = join(dirname(argv[0]), 'index.tmpl')
-        else:
+        # In order: locally, at the program base
+        for path in ['index.tmpl', join(prog_base, 'index.tmpl')]:
+            if exists(path):
+                args.tmpl = path
+                break
+        if not exists(args.tmpl):
             exit('No template file found')
 
     # Create thumbnails directory
