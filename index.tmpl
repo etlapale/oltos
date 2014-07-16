@@ -1,3 +1,4 @@
+## -*- coding: utf-8 -*-
 <!DOCTYPE html>
 <html>
   <head>
@@ -11,11 +12,10 @@
       var medias = [
         % for img in images:
           {
-            name:     "${img[0]}",
-            preview:  "${img[0]}",
-            datetime: "${img[1]['DateTimeOriginal']}",
-            width:    ${img[3]},
-            type:     "${img[5]}"
+            name:     "${img['name']}",
+            datetime: "${img['exif']['DateTimeOriginal']}",
+            width:    "${img['thumb_width']}",
+            type:     "${img['type']}"
           },
         % endfor
       ];
@@ -50,19 +50,19 @@
       </div>
 
       <div class="displayer">
-	<a id="prevlink" href="${images[first][0]}"><img id="preview" src="preview/${images[first][0]}" /></a>
+	<a id="prevlink" href="${media_dir}/${images[first]['name']}"><img id="preview" src="${preview_dir}/${images[first]['name']}" /></a>
       </div>
 
       <div class="info">
-        <strong id="name">${images[first][0]}</strong>
-        <p id="metadata">${images[first][1]['DateTime']}</p>
+        <strong id="name">${images[first]['name']}</strong>
+        <p id="metadata">${images[first]['exif']['DateTime']}</p>
         <p id="debug"></p>
       </div>
 
       <div class="scroll">
 	<div class="scrollable"><!--
 	% for (i,img) in enumerate(images):
-          --><img src="${img[2]}" width="${img[3]}" height="${img[4]}" alt="${img[0]}" id="thumb-${i}" onclick="mypreview(${i});" /><!--
+--><img src="${thumb_dir}/${img['name']}" width="${img['thumb_width']}" height="${img['thumb_height']}" alt="${img['name']}" id="thumb-${i}" onclick="mypreview(${i});" /><!--
 	% endfor
         --></div>
       </div>
