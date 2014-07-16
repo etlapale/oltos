@@ -189,10 +189,11 @@ if __name__ == '__main__':
     for path in [args.media, args.thumbs, args.preview]:
         makedirs(join(args.output, path), exist_ok=True)
 
-    # Symlink the javascript code
-    js_output_dir = join(args.output, 'js')
-    if not exists(js_output_dir):
-        symlink(join(prog_base, 'js'), js_output_dir)
+    # Symlink stylesheets and scripts
+    for dd in ['css', 'js']:
+        da_output_dir = join(args.output, dd)
+        if not exists(da_output_dir):
+            symlink(join(prog_base, dd), da_output_dir)
 
     # Walk input paths
     media_paths = []
