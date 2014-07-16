@@ -1,6 +1,8 @@
-#! /usr/bin/env python2
+#! /usr/bin/env python
 # -*- coding: utf-8; -*-
 
+
+from __future__ import print_function
 
 from argparse import ArgumentParser
 import codecs
@@ -53,7 +55,7 @@ if __name__ == '__main__':
 
     # Create output directories
     for path in [args.photos, args.thumbs, args.previews]:
-        makedirs(join(args.output, path))#, exist_ok=True)
+        makedirs(join(args.output, path), exist_ok=True)
 
     exit()
 
@@ -156,7 +158,7 @@ if __name__ == '__main__':
             # Add the image to the list
             width, height = img.size
             if not 'DateTimeOriginal' in exif:
-              print 'Skipping undated image', f
+              print('Skipping undated image', f)
             else:
               images.append((f, exif, tho, width, height, 'photo'))
             del img
