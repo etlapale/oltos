@@ -142,11 +142,16 @@ if __name__ == '__main__':
             img = Image.open(tho)
             # Add the image to the list
             width, height = img.size
-            images.append((f, exif, tho, width, height, 'photo'))
+            if not 'DateTimeOriginal' in exif:
+              print 'Skipping undated image', f
+            else:
+              images.append((f, exif, tho, width, height, 'photo'))
             del img
 
     # Order the images by date
     def exif_date(img):
+        if not 'DateTimeOriginal' in img[1]:
+          exit ('missing date time for ' + img[0])
         return img[1]['DateTimeOriginal']
     images.sort(key=exif_date, reverse=True)
 
@@ -155,7 +160,7 @@ if __name__ == '__main__':
     last = None
     idx = []
     for img in images:
-        month = img[1]['DateTimeOriginal'][:7].replace(':', '-')
+        month = exif_date (img)[:7].replace(':', '-')
         # Store monthes indexes
         if not month in idx:
             idx.append(month)
