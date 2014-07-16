@@ -6,8 +6,8 @@ from __future__ import print_function
 
 from argparse import ArgumentParser
 import codecs
-from os import listdir, makedirs, mkdir, system, walk
-from os.path import abspath, basename, dirname, exists, join, splitext
+from os import listdir, makedirs, mkdir, symlink, system, walk
+from os.path import abspath, basename, dirname, exists, isdir, join, splitext
 import re
 from sys import argv
 
@@ -15,6 +15,13 @@ from PIL import Image
 from PIL.ExifTags import TAGS
 
 from mako.template import Template
+
+
+media_extensions = 'avi jpeg jpg mov mp4 mpeg mpg'.split()
+
+def is_media_path(path):
+    _, ext = splitext(path)
+    return ext[0] == '.' and ext[1:].lower() in media_extensions
 
 
 if __name__ == '__main__':
@@ -34,8 +41,8 @@ if __name__ == '__main__':
         help='Thumbnails directory')
     ap.add_argument('--preview-dir', dest='previews', default='preview',
         help='Preview directory')
-    ap.add_argument('--photos-dir', dest='photos', default='photos',
-        help='photos directory')
+    ap.add_argument('--media-dir', dest='media', default='media',
+        help='Media directory')
     ap.add_argument('-o', '--output', dest='output', default='album',
         help='Output directory')
     args = ap.parse_args()
@@ -54,14 +61,40 @@ if __name__ == '__main__':
             exit('No template file found')
 
     # Create output directories
-    for path in [args.photos, args.thumbs, args.previews]:
+    for path in [args.media, args.thumbs, args.previews]:
         makedirs(join(args.output, path), exist_ok=True)
 
+    # Walk input paths
+    media_paths = []
+    for path in args.inputs:
+        if isdir(path):
+            for dirpath,dirnames,filenames in walk(path):
+                media_paths = media_paths                                   \
+                    + [abspath(join(dirpath,x)) for x in filenames]
+        else:
+            media_paths.append(abspath(path))
+
+    # Filter by path name
+    media_paths = [path for path in media_paths if is_media_path(path)]
+
+    # Link each medium in photos/
+    media_dir = join(args.output, args.media)
+    new_paths = []
+    for path in media_paths:
+        name = basename(path)
+        # Check if already present
+        new_path = join(media_dir, name)
+        if exists(new_path):
+            # TODO: Check if same file
+            # TODO: Create a new name
+            print('Skipping already imported medium {}'.format(name))
+            continue
+        # Create a link to the medium
+        symlink(path, new_path)
     exit()
 
-    # List input images
-    images = []
-    for f in listdir(args.indir):
+    # Process each file
+    for f in xxx:
         base, ext = splitext(f)
         # Movies
         if ext in ['.AVI', '.MOV']:
