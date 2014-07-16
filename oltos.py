@@ -30,6 +30,8 @@ if __name__ == '__main__':
         help='Thumbnails size')
     ap.add_argument('--thumbnails', dest='thumbs', default='thumbs',
         help='Thumbnails directory')
+    ap.add_argument('--preview-dir', dest='previews', default='preview',
+        help='Preview directory')
     args = ap.parse_args()
 
     # Base directory of the program
@@ -45,9 +47,10 @@ if __name__ == '__main__':
         if not exists(args.tmpl):
             exit('No template file found')
 
-    # Create thumbnails directory
-    if not exists(args.thumbs):
-        mkdir(args.thumbs)
+    # Create output directories
+    for path in [args.thumbs, args.previews]:
+        if not exists(path):
+            mkdir(path)
 
     # List input images
     images = []
