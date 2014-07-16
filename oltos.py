@@ -190,7 +190,7 @@ if __name__ == '__main__':
         makedirs(join(args.output, path), exist_ok=True)
 
     # Symlink stylesheets and scripts
-    for dd in ['css', 'js']:
+    for dd in ['css', 'js', 'robots.txt']:
         da_output_dir = join(args.output, dd)
         if not exists(da_output_dir):
             symlink(join(prog_base, dd), da_output_dir)
