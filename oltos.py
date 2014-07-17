@@ -2,6 +2,7 @@
 
 from argparse import ArgumentParser
 import codecs
+import json
 from os import listdir, makedirs, mkdir, symlink, system, walk
 from os.path import abspath, basename, dirname, exists, isdir, join, splitext
 import re
@@ -143,7 +144,6 @@ def make_image_thumbnail(path, preview_dir, thumbs_dir):
       return {'name': basename(path),
               'path': path,
               'exif': exif,
-              'thumb': tho,
               'thumb_width': width,
               'thumb_height': height,
               'type': 'photo'}
@@ -170,6 +170,8 @@ if __name__ == '__main__':
         help='Media directory')
     ap.add_argument('-o', '--output', dest='output', default='album',
         help='Output directory')
+    ap.add_argument('-t', '--title', dest='title', default='My album',
+        help='Album title')
     args = ap.parse_args()
 
     # Base directory of the program
@@ -252,6 +254,22 @@ if __name__ == '__main__':
         if month > last:
             last = month
     idx.sort(reverse=True)
+
+    # Generate JSON metadata
+    album_meta = {
+      'title': args.title,
+      'preview_dir': args.preview,
+      'thumbs_dir': args.thumbs,
+      'months': {month: [{'name': img['name'],
+                          'date': img['exif']['DateTimeOriginal'],
+                          'thumb_width': img['thumb_width'],
+                          'type': img['type']
+                         } for img in monthes[month]] \
+                 for month in monthes}
+    }
+    fp = open(join(args.output, 'album.json'), 'w')
+    fp.write(json.dumps(album_meta))
+    fp.close()
 
     # Generate the webpages
     for month in monthes:
