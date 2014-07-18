@@ -3,15 +3,29 @@ loadAlbum = (url) ->
     d3.json(url, (error, json) ->
         if error
             return console.warn(err)
-        console.log json
 
         # Update album title
+        d3.select "title"
+            .text json['title']
         d3.select "#album-title"
-            .text(json['title'])
+            .text json['title']
 
-        # Create by-date filters
-        years = [x["date"] for x in json["media"]]
-        console.log years
+        # Convert media dates
+        # TODO: convert all media dates in place
+        exifFormat = d3.time.format "%Y:%m:%d %X"
+        dates = (exifFormat.parse x["date"] for x in json["media"])
+        minYear = (d3.min dates).getFullYear()
+        maxYear = (d3.max dates).getFullYear()
+
+        # Build an histogram
+        hist = (0 for _ in [12*minYear..12*(maxYear+1)-1])
+        for date in dates
+            do (date) ->
+                year = date.getFullYear()
+                month = date.getMonth()
+                idx = 12*(year - minYear) + month
+                hist[idx]++
+        console.log hist
     )
 
 # Load a default album
