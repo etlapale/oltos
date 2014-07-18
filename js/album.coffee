@@ -18,14 +18,20 @@ loadAlbum = (url) ->
         maxYear = (d3.max dates).getFullYear()
 
         # Build an histogram
-        hist = (0 for _ in [12*minYear..12*(maxYear+1)-1])
+        hist = ([i,0] for i in [12*minYear..12*(maxYear+1)-1])
         for date in dates
             do (date) ->
                 year = date.getFullYear()
                 month = date.getMonth()
                 idx = 12*(year - minYear) + month
-                hist[idx]++
+                hist[idx][1]++
         console.log hist
+
+        # Display the histogram
+        hplot = histogram()
+        d3.select "#dates"
+            .datum hist
+            .call hplot
     )
 
 # Load a default album

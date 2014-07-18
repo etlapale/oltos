@@ -91,3 +91,46 @@ html, body {
 .displayer {
   padding: 0;
 }
+
+
+.histogram {
+  border: 1px solid red;
+}
+.histogram rect {
+  fill: steelblue;
+}
+.histogram rect:hover {
+  fill: grey;
+}
+.histogram text {
+  fill: black;
+  font: 10px sans-serif;
+  text-anchor: end;
+}
+
+.axis text {
+  font: 10px sans-serif;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+div.badtip {
+  position: absolute;
+  text-align: center;
+  width: 6em;
+  height: 2ex;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: lightgrey;
+  border-radius: 0px;
+  pointer-events: none;
+}
+
+#dates {
+  border: 1px solid green;
+  position: relative;
+}
