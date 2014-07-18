@@ -3,3 +3,5 @@ tests/*.html
 *.swp
 tests/*.AVI
 tests/*.NEF
+*.js
+tests

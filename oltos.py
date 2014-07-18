@@ -6,12 +6,11 @@ import json
 from os import listdir, makedirs, mkdir, symlink, system, walk
 from os.path import abspath, basename, dirname, exists, isdir, join, splitext
 import re
+from shutil import copyfile
 from sys import argv
 
 from PIL import Image
 from PIL.ExifTags import TAGS
-
-from mako.template import Template
 
 
 movie_extensions = 'avi mov mp4 mpeg mpg'.split()
@@ -156,8 +155,6 @@ if __name__ == '__main__':
     ap.add_argument('--force-thumbnail', dest='force_thumbnail', default=False,
         action='store_true',
         help='Force thumbnail generation')
-    ap.add_argument('--template', dest='tmpl', default=None,
-        help='Template HTML page')
     ap.add_argument('--preview-size', dest='prsz', default='528',
         help='Preview size')
     ap.add_argument('--thumb-size', dest='thsz', default='96',
@@ -177,16 +174,6 @@ if __name__ == '__main__':
     # Base directory of the program
     prog_base = abspath(dirname(argv[0]))
 
-    # Search for a web page template
-    if args.tmpl is None:
-        # In order: locally, at the program base
-        for path in ['index.tmpl', join(prog_base, 'index.tmpl')]:
-            if exists(path):
-                args.tmpl = path
-                break
-        if not exists(args.tmpl):
-            exit('No template file found')
-
     # Create output directories
     for path in [args.media, args.thumbs, args.preview]:
         makedirs(join(args.output, path), exist_ok=True)
@@ -196,6 +183,10 @@ if __name__ == '__main__':
         da_output_dir = join(args.output, dd)
         if not exists(da_output_dir):
             symlink(join(prog_base, dd), da_output_dir)
+
+    # Do some hard copies
+    copyfile(join(prog_base, 'html', 'index.html'),
+             join(args.output, 'index.html'))
 
     # Walk input paths
     media_paths = []
@@ -229,75 +220,16 @@ if __name__ == '__main__':
         if ans is not None:
             images.append(ans)
 
-    # Order the images by date
-    def exif_date(img):
-        if not 'DateTimeOriginal' in img['exif']:
-          exit ('missing date time for ' + img['path'])
-        return img['exif']['DateTimeOriginal']
-    images.sort(key=exif_date, reverse=True)
-
-    # Seperate the images by month
-    monthes = {}
-    last = ''
-    idx = []
-    for img in images:
-        month = exif_date (img)[:7].replace(':', '-')
-        # Store monthes indexes
-        if not month in idx:
-            idx.append(month)
-        # Organise the images
-        if not month in monthes:
-            monthes[month] = [img]
-        else:
-            monthes[month].append(img)
-        # Store the last month
-        if month > last:
-            last = month
-    idx.sort(reverse=True)
-
     # Generate JSON metadata
     album_meta = {
       'title': args.title,
       'preview_dir': args.preview,
       'thumbs_dir': args.thumbs,
-      'months': {month: [{'name': img['name'],
-                          'date': img['exif']['DateTimeOriginal'],
-                          'thumb_width': img['thumb_width'],
-                          'type': img['type']
-                         } for img in monthes[month]] \
-                 for month in monthes}
+      'media': [{'name': img['name'],
+                 'date': img['exif']['DateTimeOriginal'],
+                 'thumb_width': img['thumb_width'],
+                 'type': img['type']
+                } for img in images]
     }
     fp = open(join(args.output, 'album.json'), 'w')
     fp.write(json.dumps(album_meta))
-    fp.close()
-
-    # Generate the webpages
-    for month in monthes:
-        # Configure the generation
-        if month == last:
-            path = join(args.output, 'index.html')
-        else:
-            path = join(args.output, month + '.html')
-        images = monthes[month]
-        # Get the first image
-        first = 0
-        for i,img in enumerate(images):
-          if img['type'] == 'photo':
-            first = i
-            break
-        # Generate the page
-        tmpl = Template(filename=args.tmpl, input_encoding='utf-8',
-                output_encoding='utf-8')
-        env = {'images': images,
-               'monthes': idx,
-               'first': first,
-               'current': month,
-               'last': last,
-               'media_dir': args.media,
-               'preview_dir': args.preview,
-               'thumb_dir': args.thumbs
-              }
-        data = tmpl.render_unicode(**env)
-        fp = open(path, 'w')
-        fp.write(data)
-        fp.close()
