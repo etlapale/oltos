@@ -157,13 +157,15 @@ div.badtip {
 
 .month-label {
   fill: #99958e;
-  font-size: 8pt;
+  font-size: 10pt;
   cursor: pointer;
+  font-variant: small-caps;
 }
 
 .month-slice {
-  fill: #504d48;
+  fill: none;
   cursor: pointer;
+  z-index: 0;
 }
 
 .month-tick:hover .month-box {
@@ -177,4 +179,21 @@ div.badtip {
 
 .month-tick:hover .month-slice {
   fill: #423a3a;
+  z-index: 0;
+}
+
+.month-hist-box {
+  fill: #5b7171;
+  cursor: pointer;
+}
+
+.month-tick:hover .month-hist-box {
+  fill: #ced6d6;
+}
+
+.year-label {
+  font-size: 10pt;
+  font-weight: bold;
+  fill: #99958e;
+  z-index: 10;
 }
