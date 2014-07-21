@@ -1,8 +1,10 @@
 @charset "UTF-8";
 
+// http://paletton.com/#uid=33i0u0k2ljc6hnI3vhb50fr6wdx
+
 html, body {
     color: white;
-    background: #222228;
+    background: #151818;
     font-size: 12pt;
     font-family: sans-serif;
 }
@@ -14,9 +16,14 @@ html, body {
   margin-right: auto;
   /*width: 800px;*/
   width: 70%;
-  background: #cccccc;
+  background: #393631;
   padding: 1ex;
   width: 945px;
+  border-radius: 8px;
+}
+
+h1 {
+  margin-top: 0px;
 }
 
 .gallery .displayer {
@@ -25,7 +32,7 @@ html, body {
 
 .gallery .header {
   margin-bottom: 2ex;
-  color: #222222;
+  color: #99958e;
 }
 
 .gallery .header h1 {
@@ -131,6 +138,43 @@ div.badtip {
 }
 
 #dates {
-  border: 1px solid green;
+  //border: 1px solid green;
   position: relative;
+}
+
+.date-selector {
+  background: #504d48;
+}
+
+.month-tick {
+  //border: 1px solid #807;
+}
+
+.month-box {
+  fill: #423d3a;
+  cursor: pointer;
+}
+
+.month-label {
+  fill: #99958e;
+  font-size: 8pt;
+  cursor: pointer;
+}
+
+.month-slice {
+  fill: #504d48;
+  cursor: pointer;
+}
+
+.month-tick:hover .month-box {
+  fill: #d3c6c6;
+}
+
+.month-tick:hover .month-label {
+  fill: #a07d7d;
+  font-weight: bold;
+}
+
+.month-tick:hover .month-slice {
+  fill: #423a3a;
 }

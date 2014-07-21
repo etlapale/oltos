@@ -5,3 +5,4 @@ tests/*.AVI
 tests/*.NEF
 *.js
 tests
+*.css

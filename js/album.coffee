@@ -1,3 +1,41 @@
+months = "JFMAMJJASOND"
+
+makeDateSelector = (dates, hist, minYear, maxYear) ->
+    monthSelWidth = 20
+    height = 60
+
+    # Create an SVG
+    svg = d3.select "#dates"
+      .append "svg"
+        .attr("class", "date-selector")
+        .attr("width", (maxYear-minYear+1)*12*monthSelWidth)
+        .attr("height", height)
+
+    # Month groups
+    gmonth = svg.selectAll "g"
+        .data hist
+      .enter().append "g"
+        .attr("class", "month-tick")
+        .attr("transform", (d, i) ->                 "translate(#{i*monthSelWidth},0)" )
+    # Month box
+    gmonth.append "rect"
+         .attr("class", "month-slice")
+         .attr("width", "#{monthSelWidth}px")
+         .attr("height", "#{height}")
+    g = gmonth.append "g"
+        .attr("transform", "translate(0, #{height-monthSelWidth})")
+    g.append "rect"
+        .attr("class", "month-box")
+        .attr("width", "#{monthSelWidth}px")
+        .attr("height", "#{monthSelWidth}px")
+    # Month names
+    g.append "text"
+        .attr("class", "month-label")
+        .text (d,i) -> months[i%12]
+        .attr("dx", "#{monthSelWidth/2}px")
+        .attr("dy", "2ex")
+        .attr("text-anchor", "middle")
+
 loadAlbum = (url) ->
     console.log "Loading album from #{url}"
     d3.json(url, (error, json) ->
@@ -27,11 +65,7 @@ loadAlbum = (url) ->
                 hist[idx][1]++
         console.log hist
 
-        # Display the histogram
-        hplot = histogram()
-        d3.select "#dates"
-            .datum hist
-            .call hplot
+        makeDateSelector(dates, hist, minYear, maxYear)
     )
 
 # Load a default album
