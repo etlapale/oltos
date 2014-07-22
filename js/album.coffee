@@ -36,6 +36,10 @@ selectMonth = (month, json) ->
         .on("click", (d) -> showMedium d)
     thumbs.exit().remove()
 
+    # Show the first medium
+    if selMedia
+        showMedium selMedia[0]
+
 months = "jfmamjjasond"
 
 makeDateSelector = (dates, hist, minYear, maxYear, json) ->
