@@ -178,7 +178,8 @@ loadAlbum = (url) ->
         # TODO: convert all media dates in place
         dates = (exifFormat.parse x["date"] for x in json["media"])
         minYear = (d3.min dates).getFullYear()
-        maxYear = (d3.max dates).getFullYear()
+        maxDate = d3.max dates
+        maxYear = maxDate.getFullYear()
 
         # Build an histogram
         hist = ([i,0] for i in [12*minYear..12*(maxYear+1)-1])
@@ -202,6 +203,10 @@ loadAlbum = (url) ->
                 matchMedia = (x for x in json["media"] when x["name"] == mediumName)
                 if matchMedia.length
                     showMedium(matchMedia[0], year, month)
+        # Default to last month
+        else
+            selectMonth(maxYear*12 + maxDate.getMonth(), json)
+
     )
 
 # Load a default album
