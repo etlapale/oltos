@@ -15,7 +15,7 @@ from PIL.ExifTags import TAGS
 
 movie_extensions = 'avi mov mp4 mpeg mpg'.split()
 image_extensions = 'jpeg jpg png tif tiff'.split()
-media_extensions = movie_extensions + image_extensions
+media_extensions = image_extensions # + movie_extensions
 
 
 def is_media_path(path):
@@ -42,7 +42,7 @@ def symlink_media(media_paths, media_dir):
 
 def make_movie_thumbnail(path, preview_dir, thumbs_dir):
     # Fetch date
-    fp = open(f, 'rb')
+    fp = open(path, 'rb')
     data = fp.read(2048)
     fp.close()
     m = re.search('[0-9]{4}:[0-9]{2}:[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}', data)
@@ -213,7 +213,8 @@ if __name__ == '__main__':
         path = join(media_dir, name)
         _, ext = splitext(name)
         ext = ext.lower()
-        if ext[1:] in movie_extensions:
+        ans = None
+        if ext[1:] in movie_extensions and False:
             ans = make_movie_thumbnail(path, preview_dir, thumbs_dir)
         elif ext[1:] in image_extensions:
             ans = make_image_thumbnail(path, preview_dir, thumbs_dir)
