@@ -40,7 +40,7 @@ function mypreview(medium) {
 }
 
 // Scrollable mouse handler
-window.onload = function () {
+window.oldload = function () {
   // Init
   var preview = $("#preview")[0];
   preview.current = 0;

@@ -1,11 +1,15 @@
-showMedium = (medium) ->
+showMedium = (medium, year, month) ->
     mypreview medium
 
     # Display medium metadata
     d3.select "#medium-name"
         .text medium["name"]
+        .style("margin-left", "0px");
     d3.select "#medium-date"
         .text medium["date"]
+
+    # Update browser URL
+    window.location.hash = "##{year}-#{month+1}-#{medium['name']}"
 
 exifFormat = d3.time.format "%Y:%m:%d %X"
 
@@ -33,22 +37,24 @@ selectMonth = (month, json) ->
         .attr("height", (d) -> "#{json['thumbs_height']}px")
         .attr("alt", (d) -> "#{d['name']}")
         .attr("id", (d,i) -> "thumb-#{i}")
-        .on("click", (d) -> showMedium d)
+        .on("click", (d) -> showMedium(d, year, month))
     thumbs.exit().remove()
 
     # Show the first medium
     if selMedia.length
-        showMedium selMedia[0]
+        showMedium(selMedia[0], year, month)
     else
         emptyMedium =
             name: ""
             date: ""
             type: "photo"
-        showMedium emptyMedium
+        showMedium(emptyMedium, year, month)
 
     # Reset the media selector scrolling");
     d3.select ".scrollable"
-        .style("margin-left", "0px");
+
+window.onload = () ->
+    window.oldload()
 
 months = "jfmamjjasond"
 
@@ -180,6 +186,18 @@ loadAlbum = (url) ->
                 hist[idx][1]++
 
         makeDateSelector(dates, hist, minYear, maxYear, json)
+
+        # Get a month/medium from URL hash
+        match = /#(\d{4})-(\d{1,2})(-(.*))?/.exec window.location.hash
+        if match
+            year = match[1]
+            month = match[2]
+            selectMonth((+year)*12 + (+month)-1, json)
+            mediumName = match[4]
+            if mediumName
+                matchMedia = (x for x in json["media"] when x["name"] == mediumName)
+                if matchMedia.length
+                    showMedium(matchMedia[0], year, month)
     )
 
 # Load a default album
