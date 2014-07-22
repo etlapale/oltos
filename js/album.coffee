@@ -37,8 +37,14 @@ selectMonth = (month, json) ->
     thumbs.exit().remove()
 
     # Show the first medium
-    if selMedia
+    if selMedia.length
         showMedium selMedia[0]
+    else
+        emptyMedium =
+            name: ""
+            date: ""
+            type: "photo"
+        showMedium emptyMedium
 
 months = "jfmamjjasond"
 
