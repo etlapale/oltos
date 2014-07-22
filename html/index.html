@@ -29,11 +29,7 @@
       </div>
 
       <div class="scroll">
-  <div class="scrollable"><!--
-  % for (i,img) in enumerate(images):
---><img src="${thumb_dir}/${img['name']}" width="${img['thumb_width']}" height="${img['thumb_height']}" alt="${img['name']}" id="thumb-${i}" onclick="mypreview(${i});" /><!--
-  % endfor
-        --></div>
+        <div class="scrollable" id="thumbs"></div>
       </div>
     </div>
   </body>

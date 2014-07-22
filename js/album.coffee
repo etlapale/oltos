@@ -1,6 +1,32 @@
+exifFormat = d3.time.format "%Y:%m:%d %X"
+
+selectMonth = (month, json) ->
+    media = json['media']
+    year = Math.floor month / 12
+    month = month % 12
+
+    # List selected media
+    selectedMedium = (m) ->
+        date = exifFormat.parse m["date"]
+        date.getFullYear() == year && date.getMonth() == month
+    selMedia = (m for m in media when selectedMedium m)
+    console.log "Displaying #{selMedia.length} photos for #{month} #{year}"
+
+    thumbBox = d3.select "#thumbs"
+    thumbs = thumbBox.selectAll "img"
+        .data selMedia
+    thumbs.enter().append "img"
+    thumbs.attr("src", (d) -> "#{json['thumbs_dir']}/#{d['name']}")
+        .attr("width", (d) -> "#{d['thumb_width']}px")
+        .attr("height", (d) -> "#{json['thumbs_height']}px")
+        .attr("alt", (d) -> "#{d['name']}")
+        .attr("id", (d,i) -> "thumb-#{i}")
+        .on("click", (d) -> mypreview d)
+    thumbs.exit().remove()
+
 months = "jfmamjjasond"
 
-makeDateSelector = (dates, hist, minYear, maxYear) ->
+makeDateSelector = (dates, hist, minYear, maxYear, json) ->
     monthSelWidth = 20
     height = 60
 
@@ -8,7 +34,6 @@ makeDateSelector = (dates, hist, minYear, maxYear) ->
     hscale = d3.scale.linear()
         .range([0, height-monthSelWidth])
         .domain([0, d3.max(hist, (d) -> d[1])])
-    console.log "Min/max in px: #{hscale(0)} #{hscale(10)} #{hscale(22)}"
 
     # Create an SVG
     svg = d3.select "#dates"
@@ -29,6 +54,7 @@ makeDateSelector = (dates, hist, minYear, maxYear) ->
          .attr("width", "#{monthSelWidth}px")
          .attr("height", "#{height}")
          .attr("pointer-events", "all")
+         .on("click", (d) -> selectMonth(d[0], json))
     g = gmonth.append "g"
         .attr("transform", "translate(0, #{height-monthSelWidth})")
     g.append "rect"
@@ -58,7 +84,6 @@ makeDateSelector = (dates, hist, minYear, maxYear) ->
         # .attr("height", "20px")
       .append "text"
         .text (d,i) -> "#{minYear+i}"
-        # .attr("text-anchor", "top")
         .attr("dx", ".5em")
         .attr("dy", "1.8ex")
         .attr("class", "year-label")
@@ -77,7 +102,6 @@ loadAlbum = (url) ->
 
         # Convert media dates
         # TODO: convert all media dates in place
-        exifFormat = d3.time.format "%Y:%m:%d %X"
         dates = (exifFormat.parse x["date"] for x in json["media"])
         minYear = (d3.min dates).getFullYear()
         maxYear = (d3.max dates).getFullYear()
@@ -92,7 +116,7 @@ loadAlbum = (url) ->
                 hist[idx][1]++
         console.log hist
 
-        makeDateSelector(dates, hist, minYear, maxYear)
+        makeDateSelector(dates, hist, minYear, maxYear, json)
     )
 
 # Load a default album

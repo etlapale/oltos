@@ -1,5 +1,5 @@
 // Image selected for preview
-function mypreview(id) {
+function mypreview(medium) {
   // Make sure the previous video is stopped
   var vid = $("#prevvideo");
   //for (int i = 0; vid && i < vid.length; i++)
@@ -7,10 +7,9 @@ function mypreview(id) {
     vid[0].pause ();
 
   // Make sure we are in the correct mode
-  var media = medias[id];
   //var displayer = $(".displayer")[0];
-  if ($(".displayer")[0].mode != media.type) {
-    if (media.type == "video") {
+  if ($(".displayer")[0].mode != medium.type) {
+    if (medium.type == "video") {
       // Remove the video object
       if (vid)
 	vid.remove();
@@ -18,31 +17,31 @@ function mypreview(id) {
       $(".displayer").append("<video autoplay id=\"prevvideo\" controls>Video not supported.</video>");
       $("#preview").remove ();
     }
-    else if (media.type == "photo") {
+    else if (medium.type == "photo") {
       $("#prevlink").append("<img id=\"preview\" src=\"\" />");
       $("#prevvideo").remove ();
     }
-    $(".displayer")[0].mode = media.type;
+    $(".displayer")[0].mode = medium.type;
   }
-  
-  if (media.type == "photo") {
+
+  if (medium.type == "photo") {
     var preview = $("#preview")[0];
     //var thumb = $( "#thumb-" + id )[0];
-    preview.src = "preview/" + media.preview;
+    preview.src = "preview/" + medium["name"];
 
     var prevlink = $("#prevlink")[0];
-    prevlink.href = media.preview;
+    prevlink.href = "media/" + medium["name"];
 
     preview.current = id;
   }
-  else if (media.type == "video") {
-    $("#prevvideo").attr("src", media.name);
+  else if (medium.type == "video") {
+    $("#prevvideo").attr("src", media.medium);
   }
 
   var name = $(".info #name")[0];
-  name.innerHTML = media.name;
+  name.innerHTML = medium.name;
   var meta = $(".info #metadata")[0];
-  meta.innerHTML = media.datetime;
+  meta.innerHTML = medium.datetime;
 }
 
 // Scrollable mouse handler
@@ -117,7 +116,7 @@ else
 	    }
 	  });
 	  */
-	
+
 	/*
 	var handleHelper = scrollbar.find( ".ui-slider-handle" )
 	  .mousedown(function() {
@@ -129,4 +128,3 @@ else
 	.append( "<span class='ui-icon ui-icon-grip-dotted-vertical'></span>" )
 	.wrap( "<div class='ui-handle-helper-parent'></div>" ).parent();
 	*/
-

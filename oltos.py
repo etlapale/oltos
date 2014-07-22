@@ -225,6 +225,7 @@ if __name__ == '__main__':
       'title': args.title,
       'preview_dir': args.preview,
       'thumbs_dir': args.thumbs,
+      'thumbs_height': args.thsz,
       'media': [{'name': img['name'],
                  'date': img['exif']['DateTimeOriginal'],
                  'thumb_width': img['thumb_width'],
