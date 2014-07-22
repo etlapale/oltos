@@ -9,7 +9,7 @@ showMedium = (medium, year, month) ->
         .text medium["date"]
 
     # Update browser URL
-    window.location.hash = "##{year}-#{month+1}-#{medium['name']}"
+    window.location.hash = "##{year}-#{+month+1}-#{medium['name']}"
 
 exifFormat = d3.time.format "%Y:%m:%d %X"
 
@@ -191,8 +191,8 @@ loadAlbum = (url) ->
         match = /#(\d{4})-(\d{1,2})(-(.*))?/.exec window.location.hash
         if match
             year = match[1]
-            month = match[2]
-            selectMonth((+year)*12 + (+month)-1, json)
+            month = +match[2] - 1
+            selectMonth((+year)*12 + month, json)
             mediumName = match[4]
             if mediumName
                 matchMedia = (x for x in json["media"] when x["name"] == mediumName)
