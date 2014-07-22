@@ -85,6 +85,7 @@ makeDateSelector = (dates, hist, minYear, maxYear, json) ->
         .attr("class", "month-box")
         .attr("width", "#{monthSelWidth}px")
         .attr("height", "#{monthSelWidth}px")
+        .on("click", (d) -> selectMonth(d[0], json))
     # Month names
     g.append "text"
         .attr("class", "month-label")
@@ -92,6 +93,7 @@ makeDateSelector = (dates, hist, minYear, maxYear, json) ->
         .attr("dx", "#{monthSelWidth/2}px")
         .attr("dy", "2ex")
         .attr("text-anchor", "middle")
+        .on("click", (d) -> selectMonth(d[0], json))
 
     # Histogram box
     gmonth.append "g"
@@ -100,6 +102,7 @@ makeDateSelector = (dates, hist, minYear, maxYear, json) ->
         .attr("class", "month-hist-box")
         .attr("width", "#{monthSelWidth}px")
         .attr("height", (d) -> "#{hscale(d[1])}px")
+        .on("click", (d) -> selectMonth(d[0], json))
 
     # Year separators
     gmonth.append "g"
