@@ -1,5 +1,9 @@
 showMedium = (medium, year, month) ->
-    mypreview medium
+    # Update the preview medium
+    d3.select "#preview"
+        .attr("src", "preview/#{medium['name']}")
+    d3.select "#prevlink"
+        .attr("href", "media/#{medium['name']}")
 
     # Display medium metadata
     d3.select "#medium-name"

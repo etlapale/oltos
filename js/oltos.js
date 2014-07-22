@@ -25,12 +25,7 @@ function mypreview(medium) {
   }
 
   if (medium.type == "photo") {
-    var preview = $("#preview")[0];
-    //var thumb = $( "#thumb-" + id )[0];
-    preview.src = "preview/" + medium["name"];
 
-    var prevlink = $("#prevlink")[0];
-    prevlink.href = "media/" + medium["name"];
 
     // preview.current = id;
   }
