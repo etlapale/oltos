@@ -46,6 +46,10 @@ selectMonth = (month, json) ->
             type: "photo"
         showMedium emptyMedium
 
+    # Reset the media selector scrolling");
+    d3.select ".scrollable"
+        .style("margin-left", "0px");
+
 months = "jfmamjjasond"
 
 makeDateSelector = (dates, hist, minYear, maxYear, json) ->
