@@ -15,16 +15,17 @@
     <div class="gallery">
       <div class="header">
         <h1 id="album-title"></h1>
-        <div id="dates"></div>
       </div>
+
+      <div id="dates"></div>
 
       <div class="displayer">
   <a id="prevlink" href="${media_dir}/${images[first]['name']}"><img id="preview" src="${preview_dir}/${images[first]['name']}" /></a>
       </div>
 
       <div class="info">
-        <strong id="name">${images[first]['name']}</strong>
-        <p id="metadata">${images[first]['exif']['DateTime']}</p>
+        <strong id="medium-name"></strong>
+        <p id="medium-date"></p>
         <p id="debug"></p>
       </div>
 

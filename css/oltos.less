@@ -1,9 +1,10 @@
 @charset "UTF-8";
+@font-base: #c3bcae;
 
 // http://paletton.com/#uid=33i0u0k2ljc6hnI3vhb50fr6wdx
 
 html, body {
-    color: white;
+    color: @font-base;
     background: #151818;
     font-size: 12pt;
     font-family: sans-serif;
@@ -32,7 +33,6 @@ h1 {
 
 .gallery .header {
   margin-bottom: 2ex;
-  color: #99958e;
 }
 
 .gallery .header h1 {
@@ -64,11 +64,11 @@ h1 {
 
 .gallery .info {
   text-align: center;
-  color: black;
   font-size: 75%;
+  margin-bottom: 2ex;
 }
 
-.gallery .info #metadata {
+.gallery .info #medium-date {
   font-size: 75%;
 }
 
@@ -97,50 +97,13 @@ h1 {
 
 .displayer {
   padding: 0;
+  padding-top: 4ex;
+  padding-bottom: 2ex;
 }
 
-
-.histogram {
-  border: 1px solid red;
-}
-.histogram rect {
-  fill: steelblue;
-}
-.histogram rect:hover {
-  fill: grey;
-}
-.histogram text {
-  fill: black;
-  font: 10px sans-serif;
-  text-anchor: end;
-}
-
-.axis text {
-  font: 10px sans-serif;
-}
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-div.badtip {
-  position: absolute;
-  text-align: center;
-  width: 6em;
-  height: 2ex;
-  padding: 2px;
-  font: 12px sans-serif;
-  background: lightgrey;
-  border-radius: 0px;
-  pointer-events: none;
-}
-
-#dates {
-  //border: 1px solid green;
+#dates .dates-view {
   position: relative;
-  overflow: auto;
+  overflow: hidden;
 }
 
 #dates svg {
@@ -161,7 +124,7 @@ div.badtip {
 }
 
 .month-label {
-  fill: #99958e;
+  fill: @font-base;
   font-size: 10pt;
   cursor: pointer;
   font-variant: small-caps;
@@ -199,6 +162,18 @@ div.badtip {
 .year-label {
   font-size: 10pt;
   font-weight: bold;
-  fill: #99958e;
+  fill: @font-base;
   z-index: 10;
+}
+
+.scrollbar .scrollbg {
+  fill: #232828;
+}
+
+.scrollbar .scrollrect {
+  fill: #6c5656;
+}
+
+.scrollbar .scrollrect:hover {
+  fill: #897a7a;
 }

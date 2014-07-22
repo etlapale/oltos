@@ -32,16 +32,11 @@ function mypreview(medium) {
     var prevlink = $("#prevlink")[0];
     prevlink.href = "media/" + medium["name"];
 
-    preview.current = id;
+    // preview.current = id;
   }
   else if (medium.type == "video") {
     $("#prevvideo").attr("src", media.medium);
   }
-
-  var name = $(".info #name")[0];
-  name.innerHTML = medium.name;
-  var meta = $(".info #metadata")[0];
-  meta.innerHTML = medium.datetime;
 }
 
 // Scrollable mouse handler

@@ -1,3 +1,12 @@
+showMedium = (medium) ->
+    mypreview medium
+
+    # Display medium metadata
+    d3.select "#medium-name"
+        .text medium["name"]
+    d3.select "#medium-date"
+        .text medium["date"]
+
 exifFormat = d3.time.format "%Y:%m:%d %X"
 
 selectMonth = (month, json) ->
@@ -12,6 +21,9 @@ selectMonth = (month, json) ->
     selMedia = (m for m in media when selectedMedium m)
     console.log "Displaying #{selMedia.length} photos for #{month} #{year}"
 
+    # Sort media by date
+    selMedia.sort((a,b) -> a["date"] < b["date"])
+
     thumbBox = d3.select "#thumbs"
     thumbs = thumbBox.selectAll "img"
         .data selMedia
@@ -21,7 +33,7 @@ selectMonth = (month, json) ->
         .attr("height", (d) -> "#{json['thumbs_height']}px")
         .attr("alt", (d) -> "#{d['name']}")
         .attr("id", (d,i) -> "thumb-#{i}")
-        .on("click", (d) -> mypreview d)
+        .on("click", (d) -> showMedium d)
     thumbs.exit().remove()
 
 months = "jfmamjjasond"
@@ -36,8 +48,10 @@ makeDateSelector = (dates, hist, minYear, maxYear, json) ->
         .domain([0, d3.max(hist, (d) -> d[1])])
 
     # Create an SVG
-    svg = d3.select "#dates"
-      .append "svg"
+    datesDiv = d3.select "#dates"
+    datesView = datesDiv.append "div"
+        .attr("class", "dates-view")
+    svg = datesView.append "svg"
         .attr("class", "date-selector")
         .attr("width", (maxYear-minYear+1)*12*monthSelWidth)
         .attr("height", height)
@@ -88,6 +102,39 @@ makeDateSelector = (dates, hist, minYear, maxYear, json) ->
         .attr("dy", "1.8ex")
         .attr("class", "year-label")
 
+    # Scrollbar
+    scrollableWidth = svg.attr "width"
+    scrollviewWidth = datesDiv[0][0].offsetWidth
+    if scrollviewWidth < scrollableWidth
+        console.log "Scrollable width: #{scrollableWidth} / #{scrollviewWidth}"
+
+        viewElem = datesView[0][0]
+
+        bar = datesDiv.append "svg"
+            .attr("class", "scrollbar")
+            .attr("width", "#{scrollviewWidth}px")
+            .attr("height", "6px")
+            .style("position", "absolute")
+        bar.append "rect"
+            .attr("class", "scrollbg")
+             .attr("width", "#{scrollviewWidth}px")
+             .attr("height", "6px")
+        barG = bar.append "g"
+        bar = barG.append "rect"
+            .attr("class", "scrollrect")
+             .attr("width", "#{scrollviewWidth*scrollviewWidth/scrollableWidth}px")
+             .attr("height", "6px")
+             .attr("rx", "3px")
+             .attr("ry", "3px")
+             .call(d3.behavior.drag()
+               .on("drag", () ->
+                   viewElem.scrollLeft = Math.max(0, viewElem.scrollLeft + d3.event.dx)
+                 ))
+        datesView.on("scroll", () ->
+            barG.attr("transform", "translate(#{viewElem.scrollLeft*scrollviewWidth/scrollableWidth},0)")
+          )
+
+
 loadAlbum = (url) ->
     console.log "Loading album from #{url}"
     d3.json(url, (error, json) ->
@@ -114,7 +161,6 @@ loadAlbum = (url) ->
                 month = date.getMonth()
                 idx = 12*(year - minYear) + month
                 hist[idx][1]++
-        console.log hist
 
         makeDateSelector(dates, hist, minYear, maxYear, json)
     )
