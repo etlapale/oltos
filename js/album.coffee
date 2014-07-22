@@ -17,6 +17,7 @@ showMedium = (medium, year, month) ->
 exifFormat = d3.time.format "%Y:%m:%d %X"
 
 selectMonth = (month, json) ->
+    monthId = month
     media = json['media']
     year = Math.floor month / 12
     month = month % 12
@@ -57,6 +58,12 @@ selectMonth = (month, json) ->
     d3.select ".scrollable"
         .style("margin-left", "0px")
 
+    # Mark as displayed month
+    d3.select ".selected-date"
+        .classed("selected-date", false)
+    d3.select "#month-tick-#{monthId}"
+        .classed("selected-date", true)
+
 window.onload = () ->
     window.oldload()
 
@@ -84,6 +91,7 @@ makeDateSelector = (dates, hist, minYear, maxYear, json) ->
     gmonth = svg.selectAll "g"
         .data hist
       .enter().append "g"
+        .attr("id", (d) -> "month-tick-#{d[0]}")
         .attr("class", "month-tick")
         .attr("transform", (d, i) ->                 "translate(#{i*monthSelWidth},0)" )
     # Month box
@@ -134,8 +142,6 @@ makeDateSelector = (dates, hist, minYear, maxYear, json) ->
     scrollableWidth = svg.attr "width"
     scrollviewWidth = datesDiv[0][0].offsetWidth
     if scrollviewWidth < scrollableWidth
-        console.log "Scrollable width: #{scrollableWidth} / #{scrollviewWidth}"
-
         viewElem = datesView[0][0]
 
         bar = datesDiv.append "svg"
