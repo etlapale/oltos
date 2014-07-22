@@ -128,6 +128,7 @@ makeDateSelector = (dates, hist, minYear, maxYear, json) ->
         .attr("dx", ".5em")
         .attr("dy", "1.8ex")
         .attr("class", "year-label")
+        .on("click", (d,i) -> selectMonth(12*(minYear+i), json))
 
     # Scrollbar
     scrollableWidth = svg.attr "width"
