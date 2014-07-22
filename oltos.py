@@ -20,7 +20,7 @@ media_extensions = movie_extensions + image_extensions
 
 def is_media_path(path):
     _, ext = splitext(path)
-    return ext[0] == '.' and ext[1:].lower() in media_extensions
+    return ext and ext[0] == '.' and ext[1:].lower() in media_extensions
 
 
 def symlink_media(media_paths, media_dir):
