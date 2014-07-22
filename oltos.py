@@ -137,7 +137,7 @@ def make_image_thumbnail(path, preview_dir, thumbs_dir):
     width, height = img.size
     del img
     if not 'DateTimeOriginal' in exif:
-      print('Skipping undated image', f)
+      print('Skipping undated image', path)
       return None
     else:
       return {'name': basename(path),
