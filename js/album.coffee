@@ -8,7 +8,6 @@ showMedium = (medium, year, month) ->
     # Display medium metadata
     d3.select "#medium-name"
         .text medium["name"]
-        .style("margin-left", "0px");
     d3.select "#medium-date"
         .text medium["date"]
 
@@ -54,8 +53,9 @@ selectMonth = (month, json) ->
             type: "photo"
         showMedium(emptyMedium, year, month)
 
-    # Reset the media selector scrolling");
+    # Reset the media selector scroll
     d3.select ".scrollable"
+        .style("margin-left", "0px")
 
 window.onload = () ->
     window.oldload()

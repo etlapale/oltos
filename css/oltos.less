@@ -39,29 +39,6 @@ h1 {
   font-size: 125%;
 }
 
-.gallery .header div {
-  line-height: 125%;
-}
-
-.gallery .header a[href] {
-  border: 0;
-  text-decoration: none;
-  background: #77777f;
-  padding: .4ex;
-  font-weight: bold;
-  font-size: 75%;
-  color: #cccccc;
-  border-radius: 1ex;
-}
-
-.gallery .header a[href].current {
-  color: #f0a080;
-}
-
-.gallery .header a[href]:hover {
-  background: #ff6c00;
-}
-
 .gallery .info {
   text-align: center;
   font-size: 75%;
@@ -148,6 +125,10 @@ h1 {
 .month-tick:hover .month-slice {
   fill: #423a3a;
   z-index: 0;
+}
+
+.current-month .month-box {
+  fill: red;
 }
 
 .month-hist-box {
