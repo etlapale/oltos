@@ -35,16 +35,27 @@ showMedium = (medium, year, month, selMedia) ->
     # Update browser URL
     window.location.hash = "##{year}-#{+month+1}-#{medium['name']}"
 
+    # Navigation callbacks
+    previous = () -> if idx > 0
+        showMedium(selMedia[idx-1], year, month, selMedia)
+    next = () -> if idx >= 0 and idx < selMedia.length - 1
+        showMedium(selMedia[idx+1], year, month, selMedia)
+
     # Update previous/next links
     idx = selMedia.indexOf medium
     d3.select ".previous-medium"
         .classed("medium-nav-disabled", idx<=0)
-        .on("click", () -> if idx > 0
-            showMedium(selMedia[idx-1], year, month, selMedia))
+        .on("click", previous)
     d3.select ".next-medium"
         .classed("medium-nav-disabled", idx<0 or idx >= selMedia.length - 1)
-        .on("click", () -> if idx >= 0 and idx < selMedia.length - 1
-            showMedium(selMedia[idx+1], year, month, selMedia))
+        .on("click", next)
+
+    # Previous/next key bindings
+    d3.select "body"
+        .on("keydown", () -> switch d3.event.keyCode
+            when 37 then previous()
+            when 39 then next()
+          )
 
 exifFormat = d3.time.format "%Y:%m:%d %X"
 
