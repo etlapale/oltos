@@ -1,7 +1,28 @@
 showMedium = (medium, year, month, selMedia) ->
+    # Image loading, show spinning state
+    preview = d3.select "#preview"
+        .style("opacity", 0.3)
+    spinner = d3.select "#preview-load-spinner"
+        .classed("fa-spin", true)
+        .style("display", "inline")
+    spinner.style
+      "top": "#{(preview[0][0].height - spinner[0][0].clientHeight)/2}px"
+      "left": "#{(preview[0][0].width - spinner[0][0].clientWidth)/2}px"
+
+    # Preload the image to be notified
+    img = new Image;
+    img.src = "preview/#{medium['name']}"
+
+    # Image loaded, restore normal state
+    normalState = () ->
+        preview.attr("src", img.src)
+        spinner.classed("fa-spin", false)
+            .style("display", "none")
+        preview.style("opacity", 1.0)
+
+    img.onload = normalState
+
     # Update the preview medium
-    d3.select "#preview"
-        .attr("src", "preview/#{medium['name']}")
     d3.select "#prevlink"
         .attr("href", "media/#{medium['name']}")
 
