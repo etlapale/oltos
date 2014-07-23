@@ -1,3 +1,4 @@
+@import "font-awesome.less";
 @charset "UTF-8";
 @font-base: #c3bcae;
 
@@ -19,7 +20,7 @@ html, body {
   width: 70%;
   background: #393631;
   padding: 1ex;
-  width: 945px;
+  width: 1024px;
   border-radius: 8px;
 }
 
@@ -76,6 +77,33 @@ h1 {
   padding: 0;
   padding-top: 4ex;
   padding-bottom: 2ex;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  .medium-preview {
+    // flex-grow: ;
+  }
+
+  .medium-nav {
+    font-size: 300%;
+    color: #646057;
+    border-radius: 2ex;
+    cursor: pointer;
+
+    // flex-grow: 1;
+    margin-left: .5em;
+    margin-right: .5em;
+    padding-left: .5em;
+    padding-right: .5em;
+  }
+
+  .medium-nav:hover {
+    color: #ced6d6;
+    background: #929e9e;
+  }
 }
 
 #dates .dates-view {

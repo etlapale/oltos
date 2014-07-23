@@ -150,7 +150,7 @@ def make_image_thumbnail(path, preview_dir, thumbs_dir):
 
 if __name__ == '__main__':
     ap = ArgumentParser(description='Generate a gallery')
-    ap.add_argument('inputs', nargs='+',
+    ap.add_argument('inputs', nargs='*',
         help='Input photos or photo directories')
     ap.add_argument('--force-thumbnail', dest='force_thumbnail', default=False,
         action='store_true',
@@ -179,7 +179,7 @@ if __name__ == '__main__':
         makedirs(join(args.output, path), exist_ok=True)
 
     # Symlink stylesheets and scripts
-    for dd in ['css', 'js', 'robots.txt']:
+    for dd in ['css', 'fonts', 'js', 'robots.txt']:
         da_output_dir = join(args.output, dd)
         if not exists(da_output_dir):
             symlink(join(prog_base, dd), da_output_dir)

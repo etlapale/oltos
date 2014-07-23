@@ -1,4 +1,4 @@
-showMedium = (medium, year, month) ->
+showMedium = (medium, year, month, selMedia) ->
     # Update the preview medium
     d3.select "#preview"
         .attr("src", "preview/#{medium['name']}")
@@ -13,6 +13,15 @@ showMedium = (medium, year, month) ->
 
     # Update browser URL
     window.location.hash = "##{year}-#{+month+1}-#{medium['name']}"
+
+    # Update previous/next links
+    idx = selMedia.indexOf medium
+    d3.select ".previous-medium"
+        .on("click", () -> if idx > 0
+            showMedium(selMedia[idx-1], year, month, selMedia))
+    d3.select ".next-medium"
+        .on("click", () -> if idx >= 0 and idx < selMedia.length - 1
+            showMedium(selMedia[idx+1], year, month, selMedia))
 
 exifFormat = d3.time.format "%Y:%m:%d %X"
 
@@ -41,18 +50,18 @@ selectMonth = (month, json) ->
         .attr("height", (d) -> "#{json['thumbs_height']}px")
         .attr("alt", (d) -> "#{d['name']}")
         .attr("id", (d,i) -> "thumb-#{i}")
-        .on("click", (d) -> showMedium(d, year, month))
+        .on("click", (d) -> showMedium(d, year, month, selMedia))
     thumbs.exit().remove()
 
     # Show the first medium
     if selMedia.length
-        showMedium(selMedia[0], year, month)
+        showMedium(selMedia[0], year, month, selMedia)
     else
         emptyMedium =
             name: ""
             date: ""
             type: "photo"
-        showMedium(emptyMedium, year, month)
+        showMedium(emptyMedium, year, month, selMedia)
 
     # Reset the media selector scroll
     d3.select ".scrollable"
@@ -63,6 +72,9 @@ selectMonth = (month, json) ->
         .classed("selected-date", false)
     d3.select "#month-tick-#{monthId}"
         .classed("selected-date", true)
+
+    # Return the list of selected media
+    selMedia
 
 window.onload = () ->
     window.oldload()
@@ -204,12 +216,12 @@ loadAlbum = (url) ->
         if match
             year = match[1]
             month = +match[2] - 1
-            selectMonth((+year)*12 + month, json)
+            selMedia = selectMonth((+year)*12 + month, json)
             mediumName = match[4]
             if mediumName
                 matchMedia = (x for x in json["media"] when x["name"] == mediumName)
                 if matchMedia.length
-                    showMedium(matchMedia[0], year, month)
+                    showMedium(matchMedia[0], year, month, selMedia)
         # Default to last month
         else
             selectMonth(maxYear*12 + maxDate.getMonth(), json)
