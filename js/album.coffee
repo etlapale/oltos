@@ -17,9 +17,11 @@ showMedium = (medium, year, month, selMedia) ->
     # Update previous/next links
     idx = selMedia.indexOf medium
     d3.select ".previous-medium"
+        .classed("medium-nav-disabled", idx<=0)
         .on("click", () -> if idx > 0
             showMedium(selMedia[idx-1], year, month, selMedia))
     d3.select ".next-medium"
+        .classed("medium-nav-disabled", idx<0 or idx >= selMedia.length - 1)
         .on("click", () -> if idx >= 0 and idx < selMedia.length - 1
             showMedium(selMedia[idx+1], year, month, selMedia))
 
