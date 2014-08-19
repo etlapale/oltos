@@ -1,12 +1,25 @@
+# Bugs
 - Media sorting on Chrome
-- Unified scrolling for date selector and thumbs
-- Re-enable videos
+
+# Features
+- Arbitrary browser/image sizes
 - New images / sessions
+- Re-enable videos
 - Background loading
 - Diaporama
-- More metadata (geoloc)
+- More metadata (exif, geoloc, titles, descriptions)
+- Android support
+- Gestures, gravity
+- Fullscreen
 - Range date selector
 - Other selectors (geoloc, keywords, stacked years)
-- Arbitrary browser/image sizes
-- Year labels on top
+- User defined comments/favorites in sessions
 - Custom font
+- Unified scrolling for date selector and thumbs
+- GUI for Python script
+- Remove jQuery dependency
+- Center thumb selector
+- Download
+- Help/tutorial in JS
+- Publish with website
+- Disable spinner for short durations (~200ms?)
