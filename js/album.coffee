@@ -238,10 +238,11 @@ loadAlbum = (url) ->
         hist = ([i,0] for i in [12*minYear..12*(maxYear+1)-1])
         for date in dates
             do (date) ->
-                year = date.getFullYear()
-                month = date.getMonth()
-                idx = 12*(year - minYear) + month
-                hist[idx][1]++
+                if date?
+                    year = date.getFullYear()
+                    month = date.getMonth()
+                    idx = 12*(year - minYear) + month
+                    hist[idx][1]++
 
         makeDateSelector(dates, hist, minYear, maxYear, json)
 

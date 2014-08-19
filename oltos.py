@@ -136,7 +136,7 @@ def make_image_thumbnail(path, preview_dir, thumbs_dir):
     # Add the image to the list
     width, height = img.size
     del img
-    if not 'DateTimeOriginal' in exif:
+    if not 'DateTimeOriginal' in exif or not re.match(r'[0-9]{4}:[0-9]{2}:[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}',  exif['DateTimeOriginal']):
       print('Skipping undated image', path)
       return None
     else:
