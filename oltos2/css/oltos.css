@@ -1,0 +1,25 @@
+.preview2.ng-hide-add,
+.preview2.ng-hide-remove {
+  -webkit-transition: all linear 0.5s;
+  -moz-transition: all linear 0.5s;
+  -o-transition: all linear 0.5s;
+  transition: all linear 0.5s;
+  display: block!important;
+}
+.preview2.ng-hide-add.ng-hide-add-active,
+.preview2.ng-hide-remove {
+  opacity: 0;
+}
+.preview2.ng-hide-add,
+.preview2.ng-hide-remove.ng-hide-remove-active {
+  opacity: 1;
+}
+
+.medium-nav {
+    font-size: 300%;
+    cursor: pointer;
+}
+
+.selector {
+    white-space: nowrap;
+}
