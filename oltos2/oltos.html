@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="sliderApp" ng-controller="AlbumCtrl as album">
   <head>
     <meta charset="utf-8" />
-    <title>Oltos 2 – AngularJS version</title>
+    <title>{{album.title}}</title>
     <link href="css/font-awesome.min.css" type="text/css" rel="stylesheet" />
     <link href="css/oltos.css" type="text/css" rel="stylesheet" />
     <script type="text/javascript" src="js/angular.js"></script>
@@ -10,13 +10,10 @@
     <script type="text/javascript" src="js/oltos.js"></script>
   </head>
   <body>
-    <div class="gallery"
-	 ng-app="sliderApp" ng-controller="AlbumCtrl as album">
+    <div class="gallery">
       <div class="header"><h1 id="album-title">{{album.title}}</h1></div>
-
       <month-selector months="album.months"></month-selector>
-      <slider media="album.media"></slider>
-      
+      <slider media="album.media"></slider>      
     </div>
   </body>
 </html>
