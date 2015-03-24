@@ -5,12 +5,14 @@
     <title>{{album.title}}</title>
     <link href="css/oltos.css" type="text/css" rel="stylesheet" />
     <script type="text/javascript" src="js/angular.js"></script>
+    <script type="text/javascript" src="js/d3-service.js"></script>
     <script type="text/javascript" src="js/oltos.js"></script>
   </head>
   <body>
     <div class="gallery">
-      <div class="header"><h1 id="album-title">{{album.title}}</h1></div>
+      <h1>{{album.title}}</h1>
       <month-selector months="album.months"></month-selector>
+      <histogram></histogram>
       <slider media="album.media"></slider>      
     </div>
   </body>

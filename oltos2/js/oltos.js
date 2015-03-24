@@ -1,6 +1,8 @@
-var sliderApp = angular.module('sliderApp', [])
+var sliderApp = angular.module('sliderApp', ["d3"])
     .controller('AlbumCtrl', ["$http", function($http) {
 	var self = this;
+
+	self.media = [];
 	
 	// Load the album
 	$http.get('album.json').then(function(response) {
@@ -13,9 +15,6 @@ var sliderApp = angular.module('sliderApp', [])
 	    console.error("could not fetch the album");
 	});
 	
-	self.title = "Untitled Album";
-	self.media = [];
-
 	self.months = {2011: {2: 2,
 			      10: 1},
 		       2013: {9: 2}};
@@ -23,6 +22,18 @@ var sliderApp = angular.module('sliderApp', [])
 	self.year = 2013;
 	self.month = 9;
 	
+    }])
+    .directive("histogram", ["d3Promise", function(d3Promise) {
+	return {
+	    restruct: "AE",
+	    link: function($scope, $element, $attrs) {
+		d3Promise.then(function(d3) {
+		    console.log(d3);
+		    d3.select($element[0])
+			.append("svg");
+		});
+	    }
+	}
     }])
     .directive("monthSelector", [function() {
 	return {
