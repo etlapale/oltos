@@ -20,6 +20,10 @@
     cursor: pointer;
 }
 
+.year-nav {
+    cursor: pointer;
+}
+
 .selector {
     white-space: nowrap;
 }

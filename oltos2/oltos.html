@@ -14,42 +14,9 @@
 	 ng-app="sliderApp" ng-controller="AlbumCtrl as album">
       <div class="header"><h1 id="album-title">{{album.title}}</h1></div>
 
-      <!-- Date selector -->
-      <div>
-	<select ng-model="album.year"
-		ng-options="year for year in album.years">
-	</select>
-	<select ng-model="album.month"
-		ng-options="month for month in [1,2,3,4,5,6,7,8,9,10,11,12]">
-	</select>
-      </div>
-
-      <!-- Media preview -->
-      <img ng-src="preview/{{album.media[album.currentIndex].name}}" />
-
-      <!-- Media metadata -->
-      <div>
-	{{album.currentIndex+1}} / {{album.media.length}}
-	{{album.media[album.currentIndex].name}}
-	{{album.media[album.currentIndex].date | date:'yyyy-MM-dd hh:mm:ss'}}
-      </div>
-
-      <!-- Navigator -->
-      <div class="nav-arrows">
-	<a class="medium-nav" ng-click="album.prev()">
-	  <span class="fa fa-angle-left"></span>
-	</a>
-	<a class="medium-nav" ng-click="album.next()">
-	  <span class="fa fa-angle-right"></span>
-	</a>
-      </div>
-
-      <!-- Media selector -->
-      <div class="selector">
-	<img ng-repeat="medium in album.media"
-	     ng-src="thumbs/{{medium.name}}"
-	     alt="{{medium.name}}" />
-      </div>
+      <month-selector months="album.months"></month-selector>
+      <slider media="album.media"></slider>
+      
     </div>
   </body>
 </html>
