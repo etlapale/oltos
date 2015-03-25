@@ -36,6 +36,9 @@ var sliderApp = angular.module('sliderApp', ["d3"])
     .directive("histogram", ["d3Promise", function(d3Promise) {
 	return {
 	    restruct: "AE",
+	    scope: {
+		hist: "=",
+	    },
 	    link: function($scope, $element, $attrs) {
 		d3Promise.then(function(d3) {
 		    //console.log(d3);
@@ -56,13 +59,15 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 			.classed("month-selector", true)
 			.attr("width", 12*monthSelWidth)
 			.attr("height", height);
-		    var gmonth = svg.selectAll("g")
-		        .data([13, 2, 31, 14, 5, 9, 7, 18, 9, 3, 0, 12])
-		      .enter().append("g")
+		    $scope.gall = svg.selectAll("g")
+		        .data([13, 2, 31, 14, 5, 9, 7, 18, 9, 3, 0, 12]);
+		    console.log($scope.gall);
+		    var gmonth = $scope.gall.enter().append("g")
 			.classed("month-tick", true)
 			.attr("transform", function (d,i) {
 			    return "translate("+(i*monthSelWidth)+",0)"
 			});
+		    $scope.gmonth = gmonth;
 		    gmonth.append("rect")
 			.classed("month-slice", true)
 			.attr("width", ""+monthSelWidth+"px")
@@ -95,6 +100,12 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 			.attr("height", function(d) { return ""+hscale(d)+"px"; })
 			.on("click", selectMonth);
 		});
+		$scope.$watch("hist", function() {
+		    console.log("month hist changed to:");
+		    console.log($scope.hist);
+		    if ($scope.gall !== undefined)
+			$scope.gmonth.data($scope.hist);
+		});
 	    }
 	}
     }])
@@ -106,23 +117,28 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 		hist: "=",
 	    },
 	    link: function($scope, $element, $attrs) {
-		$scope.years = Object.keys($scope.hist).sort();
-		
 		$scope.yearIndex = 0;
 		$scope.monthIndex = 0;
+		
+		$scope.years = Object.keys($scope.hist).sort();
 
 		$scope.$watch("hist", function() {
 		    $scope.years = Object.keys($scope.hist).sort();
 		    $scope.yearIndex = Math.min(Math.max($scope.yearIndex,0),
 						$scope.years.length-1);
+		    $scope.monthHist = $scope.hist[$scope.years[$scope.yearIndex]];
+		    console.log("Setting month histogram to:");
+		    console.log($scope.monthHist);
 		});
 
 		$scope.prevYear = function() {
 		    $scope.yearIndex = Math.max($scope.yearIndex - 1, 0);
+		    $scope.monthHist = $scope.hist[$scope.years[$scope.yearIndex]];
 		}
 		$scope.nextYear = function() {
 		    $scope.yearIndex = Math.min($scope.yearIndex + 1,
 						$scope.years.length - 1);
+		    $scope.monthHist = $scope.hist[$scope.years[$scope.yearIndex]];
 		}
 	    }
 	}
