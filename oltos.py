@@ -8,6 +8,7 @@ from os.path import abspath, basename, dirname, exists, isdir, join, splitext
 import re
 from shutil import copyfile
 from sys import argv
+import time
 
 from PIL import Image
 from PIL.ExifTags import TAGS
@@ -137,15 +138,16 @@ def make_image_thumbnail(path, preview_dir, thumbs_dir):
     width, height = img.size
     del img
     if not 'DateTimeOriginal' in exif or not re.match(r'[0-9]{4}:[0-9]{2}:[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}',  exif['DateTimeOriginal']):
-      print('Skipping undated image', path)
-      return None
+        print('Skipping undated image', path)
+        return None
     else:
-      return {'name': basename(path),
-              'path': path,
-              'exif': exif,
-              'thumb_width': width,
-              'thumb_height': height,
-              'type': 'photo'}
+        d = time.strptime(exif['DateTimeOriginal'], '%Y:%m:%d %H:%M:%S')
+        return {'name': basename(path),
+                'path': path,
+                'date': time.strftime('%Y-%m-%dT%H:%M:%S', d),
+                'thumb_width': width,
+                'thumb_height': height,
+                'type': 'photo'}
 
 
 if __name__ == '__main__':
@@ -227,11 +229,7 @@ if __name__ == '__main__':
       'preview_dir': args.preview,
       'thumbs_dir': args.thumbs,
       'thumbs_height': args.thsz,
-      'media': [{'name': img['name'],
-                 'date': img['exif']['DateTimeOriginal'],
-                 'thumb_width': img['thumb_width'],
-                 'type': img['type']
-                } for img in images]
+      'media': images
     }
     fp = open(join(args.output, 'album.json'), 'w')
     fp.write(json.dumps(album_meta))
