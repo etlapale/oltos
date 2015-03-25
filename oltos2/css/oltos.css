@@ -12,3 +12,53 @@
 .selector {
     white-space: nowrap;
 }
+
+.month-selector {
+  background: #504d48;
+}
+
+.month-box {
+    fill: #423d3a;
+    cursor: pointer;
+}
+
+.month-label {
+    fill: white;
+    font-size: 10pt;
+    cursor: pointer;
+    font-variant: small-caps;
+}
+
+.month-slice {
+  fill: none;
+  cursor: pointer;
+  z-index: 0;
+}
+
+.month-tick:hover .month-slice {
+  fill: #423a3a;
+  z-index: 0;
+}
+
+.month-tick:hover .month-box {
+  fill: #d3c6c6;
+}
+
+.month-tick:hover .month-label {
+  fill: #a07d7d;
+  font-weight: bold;
+}
+
+.month-tick:hover .month-slice {
+  fill: #423a3a;
+  z-index: 0;
+}
+
+.month-hist-box {
+  fill: #5b7171;
+  cursor: pointer;
+}
+
+.month-tick:hover .month-hist-box {
+  fill: #ced6d6;
+}
