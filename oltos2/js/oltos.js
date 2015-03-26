@@ -40,6 +40,9 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 		hist: "=",
 	    },
 	    link: function($scope, $element, $attrs) {
+
+		$scope.hist = [0,0,0,0,0,0,0,0,0,0,0,0];
+		
 		d3Promise.then(function(d3) {
 		    //console.log(d3);
 		    var months = "jfmamjjasond";
@@ -48,7 +51,7 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 
 		    var hscale = d3.scale.linear()
 			.range([0, height-monthSelWidth])
-			.domain([0, 31]);
+			.domain([0, d3.max($scope.hist)]);
 
 		    var selectMonth = function(d,i) {
 			console.log("Selecting month "+i);
@@ -59,15 +62,13 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 			.classed("month-selector", true)
 			.attr("width", 12*monthSelWidth)
 			.attr("height", height);
-		    $scope.gall = svg.selectAll("g")
-		        .data([13, 2, 31, 14, 5, 9, 7, 18, 9, 3, 0, 12]);
-		    console.log($scope.gall);
-		    var gmonth = $scope.gall.enter().append("g")
+		    var gall = svg.selectAll("g")
+		        .data($scope.hist);
+		    var gmonth = gall.enter().append("g")
 			.classed("month-tick", true)
 			.attr("transform", function (d,i) {
 			    return "translate("+(i*monthSelWidth)+",0)"
 			});
-		    $scope.gmonth = gmonth;
 		    gmonth.append("rect")
 			.classed("month-slice", true)
 			.attr("width", ""+monthSelWidth+"px")
@@ -90,21 +91,32 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 			.attr("text-anchor", "middle")
 			.on("click", selectMonth);
 		    // Month histogram rectangle
-		    gmonth.append("g")
+		    var grs = gmonth.append("g")
 			.attr("transform", function(d) {
 			    return "translate(0,"+(height-monthSelWidth-hscale(d))+")";
-			})
-		      .append("rect")
+			});
+		    var rects = grs.append("rect")
 			.classed("month-hist-box", true)
 			.attr("width", ""+monthSelWidth+"px")
 			.attr("height", function(d) { return ""+hscale(d)+"px"; })
 			.on("click", selectMonth);
-		});
-		$scope.$watch("hist", function() {
-		    console.log("month hist changed to:");
-		    console.log($scope.hist);
-		    if ($scope.gall !== undefined)
-			$scope.gmonth.data($scope.hist);
+
+		    $scope.$watch("hist", function() {
+			hscale.domain([0, d3.max($scope.hist)]);
+			
+			gall.data($scope.hist);
+			grs.data($scope.hist);
+
+			var transitionDelay = 250;	// [ms]
+			
+			grs.transition().duration(transitionDelay)
+			    .attr("transform", function(d) {
+				return "translate(0,"+(height-monthSelWidth-hscale(d))+")";
+			    });
+			rects.data($scope.hist);
+			rects.transition().duration(transitionDelay)
+			    .attr("height", function(d) { return ""+hscale(d)+"px"; });
+		    }); 
 		});
 	    }
 	}
