@@ -11,7 +11,9 @@
   <body>
     <div class="gallery">
       <h1>{{album.title}}</h1>
-      <month-selector hist="album.hist"></month-selector>
+      <month-selector hist="album.hist"
+		      on-change="album.monthSelected(year,month)">
+      </month-selector>
       <!-- <slider media="album.media"></slider> -->
     </div>
   </body>

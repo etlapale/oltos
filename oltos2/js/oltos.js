@@ -4,7 +4,7 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 
 	self.media = [];
 	self.hist = {};
-	
+
 	// Load the album
 	$http.get('album.json').then(function(response) {
 	    console.log('got album.json');
@@ -22,29 +22,33 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 		if (self.hist[y] === undefined)
 		    self.hist[y] = [0,0,0,0,0,0,0,0,0,0,0,0];
 		self.hist[y][date.getMonth()]++;
-				
+
 		return medium;
 	    });
 
 	    console.log(maxDate);
 	    console.log(self.hist);
-	    
+
 	}, function(errResponse) {
 	    console.error("could not fetch the album");
 	});
+
+	self.monthSelected = function(year, month) {
+	    console.log("new selection: " + year + "-"+month);
+	}
     }])
     .directive("histogram", ["d3Promise", function(d3Promise) {
 	return {
 	    restruct: "AE",
 	    scope: {
 		hist: "=",
+		onClick: "&"
 	    },
 	    link: function($scope, $element, $attrs) {
 
 		$scope.hist = [0,0,0,0,0,0,0,0,0,0,0,0];
-		
+
 		d3Promise.then(function(d3) {
-		    //console.log(d3);
 		    var months = "jfmamjjasond";
 		    var monthSelWidth = 20;
 		    var height = 60;
@@ -54,9 +58,9 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 			.domain([0, d3.max($scope.hist)]);
 
 		    var selectMonth = function(d,i) {
-			console.log("Selecting month "+i);
+			$scope.onClick({index: i});
 		    };
-		    
+
 		    var svg = d3.select($element[0])
 		      .append("svg")
 			.classed("month-selector", true)
@@ -103,12 +107,12 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 
 		    $scope.$watch("hist", function() {
 			hscale.domain([0, d3.max($scope.hist)]);
-			
+
 			gall.data($scope.hist);
 			grs.data($scope.hist);
 
 			var transitionDelay = 250;	// [ms]
-			
+
 			grs.transition().duration(transitionDelay)
 			    .attr("transform", function(d) {
 				return "translate(0,"+(height-monthSelWidth-hscale(d))+")";
@@ -116,7 +120,7 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 			rects.data($scope.hist);
 			rects.transition().duration(transitionDelay)
 			    .attr("height", function(d) { return ""+hscale(d)+"px"; });
-		    }); 
+		    });
 		});
 	    }
 	}
@@ -127,11 +131,12 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 	    templateUrl: "templates/month-selector.html",
 	    scope: {
 		hist: "=",
+		onChange: "&"
 	    },
 	    link: function($scope, $element, $attrs) {
 		$scope.yearIndex = 0;
 		$scope.monthIndex = 0;
-		
+
 		$scope.years = Object.keys($scope.hist).sort();
 
 		$scope.$watch("hist", function() {
@@ -139,8 +144,6 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 		    $scope.yearIndex = Math.min(Math.max($scope.yearIndex,0),
 						$scope.years.length-1);
 		    $scope.monthHist = $scope.hist[$scope.years[$scope.yearIndex]];
-		    console.log("Setting month histogram to:");
-		    console.log($scope.monthHist);
 		});
 
 		$scope.prevYear = function() {
@@ -151,6 +154,10 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 		    $scope.yearIndex = Math.min($scope.yearIndex + 1,
 						$scope.years.length - 1);
 		    $scope.monthHist = $scope.hist[$scope.years[$scope.yearIndex]];
+		}
+		$scope.monthSelected = function(i) {
+		    $scope.onChange({year: $scope.years[$scope.yearIndex],
+				     month: i+1});
 		}
 	    }
 	}
@@ -163,18 +170,18 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 		media: "="
 	    },
 	    link: function($scope, $element, $attrs) {
-		
+
 		var setCurrentIndex = function(idx) {
 		    $scope.currentIndex = Math.max(0, Math.min(idx, $scope.media.length - 1));
 		};
-		
+
 		$scope.next = function() {
 		    setCurrentIndex($scope.currentIndex + 1);
 		};
 		$scope.prev = function() {
 		    setCurrentIndex($scope.currentIndex - 1);
 		};
-		
+
 		setCurrentIndex(0);
 	    }
 	};
