@@ -4,6 +4,7 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 
 	self.media = [];
 	self.hist = {};
+	self.displayedMedia = [];
 
 	// Load the album
 	$http.get('album.json').then(function(response) {
@@ -33,8 +34,18 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 	    console.error("could not fetch the album");
 	});
 
+	// A new month got selected, update the displayed media
 	self.monthSelected = function(year, month) {
-	    console.log("new selection: " + year + "-"+month);
+	    console.log("new selection: " + year + "-"+(month+1));
+
+	    self.displayedMedia = self.media.filter(function(medium) {
+		var date = medium.date;
+		return date.getFullYear() == year
+		    && date.getMonth() == month;
+	    });
+
+	    console.log("displaying "+self.displayedMedia.length+"/"+self.media.length+" media");
+
 	}
     }])
     .directive("histogram", ["d3Promise", function(d3Promise) {
@@ -157,7 +168,7 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 		}
 		$scope.monthSelected = function(i) {
 		    $scope.onChange({year: $scope.years[$scope.yearIndex],
-				     month: i+1});
+				     month: i});
 		}
 	    }
 	}
@@ -182,7 +193,12 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 		    setCurrentIndex($scope.currentIndex - 1);
 		};
 
-		setCurrentIndex(0);
+		//setCurrentIndex(0);
+		$scope.currentIndex = 0;
+
+		$scope.$watch("media", function() {
+		    console.log("displayed media changed!");
+		});
 	    }
 	};
     }]);
