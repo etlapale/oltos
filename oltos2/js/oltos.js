@@ -13,22 +13,30 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 	    self.hist = {};
 
 	    // Build a date histogram
-	    var maxDate = response.data.media[0].date;
-	    self.media = response.data.media.map(function(medium) {
-		var date = medium.date = new Date(medium.date);
-		var y = date.getFullYear();
-
-		if (date > maxDate)
-		    maxDate = date;
-		if (self.hist[y] === undefined)
-		    self.hist[y] = [0,0,0,0,0,0,0,0,0,0,0,0];
-		self.hist[y][date.getMonth()]++;
-
-		return medium;
-	    });
+	    var maxDate = new Date(response.data.media[0].date);
+	    self.media = response.data.media
+	        // Convert the dates to Data and build the historgrams
+		.map(function(medium) {
+		    var date = medium.date = new Date(medium.date);
+		    var y = date.getFullYear();
+		    
+		    if (date > maxDate)
+			maxDate = date;
+		    if (self.hist[y] === undefined)
+			self.hist[y] = [0,0,0,0,0,0,0,0,0,0,0,0];
+		    self.hist[y][date.getMonth()]++;
+		    
+		    return medium;
+		})
+	        // Sort by date to facilitate presentation and searching
+		.sort(function(a,b) {
+		    return a.date - b.date;
+		});
 
 	    console.log(maxDate);
 	    console.log(self.hist);
+	    
+	    self.monthSelected(maxDate.getFullYear(), maxDate.getMonth());
 
 	}, function(errResponse) {
 	    console.error("could not fetch the album");
@@ -38,6 +46,7 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 	self.monthSelected = function(year, month) {
 	    console.log("new selection: " + year + "-"+(month+1));
 
+	    // TODO Use the fact that the media are sorted
 	    self.displayedMedia = self.media.filter(function(medium) {
 		var date = medium.date;
 		return date.getFullYear() == year
@@ -45,7 +54,6 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 	    });
 
 	    console.log("displaying "+self.displayedMedia.length+"/"+self.media.length+" media");
-
 	}
     }])
     .directive("histogram", ["d3Promise", function(d3Promise) {
@@ -150,10 +158,13 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 
 		$scope.years = Object.keys($scope.hist).sort();
 
+		// New histogram set
 		$scope.$watch("hist", function() {
+		    // Go to the last year
 		    $scope.years = Object.keys($scope.hist).sort();
-		    $scope.yearIndex = Math.min(Math.max($scope.yearIndex,0),
-						$scope.years.length-1);
+		    //$scope.yearIndex = Math.min(Math.max($scope.yearIndex,0), $scope.years.length-1);
+		    $scope.yearIndex = $scope.years.length - 1;
+
 		    $scope.monthHist = $scope.hist[$scope.years[$scope.yearIndex]];
 		});
 
