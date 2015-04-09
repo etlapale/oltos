@@ -57,7 +57,7 @@ showMedium = (medium, year, month, selMedia) ->
             when 39 then next()
           )
 
-exifFormat = d3.time.format "%Y:%m:%d %X"
+exifFormat = d3.time.format "%Y-%m-%dT%X"
 
 selectMonth = (month, json) ->
     monthId = month
@@ -229,6 +229,7 @@ loadAlbum = (url) ->
 
         # Convert media dates
         # TODO: convert all media dates in place
+        console.log(json["media"][0]["date"])
         dates = (exifFormat.parse x["date"] for x in json["media"])
         minYear = (d3.min dates).getFullYear()
         maxDate = d3.max dates
