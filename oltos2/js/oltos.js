@@ -46,7 +46,7 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 	self.monthSelected = function(year, month) {
 	    console.log("new selection: " + year + "-"+(month+1));
 
-	    // TODO Use the fact that the media are sorted
+	    // TODO Use the fact that the media are sorted	    
 	    self.displayedMedia = self.media.filter(function(medium) {
 		var date = medium.date;
 		return date.getFullYear() == year
@@ -77,7 +77,9 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 			.domain([0, d3.max($scope.hist)]);
 
 		    var selectMonth = function(d,i) {
-			$scope.onClick({index: i});
+			$scope.$apply(function() {
+			    $scope.onClick({index: i});
+			});
 		    };
 
 		    var svg = d3.select($element[0])
@@ -162,9 +164,7 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 		$scope.$watch("hist", function() {
 		    // Go to the last year
 		    $scope.years = Object.keys($scope.hist).sort();
-		    //$scope.yearIndex = Math.min(Math.max($scope.yearIndex,0), $scope.years.length-1);
 		    $scope.yearIndex = $scope.years.length - 1;
-
 		    $scope.monthHist = $scope.hist[$scope.years[$scope.yearIndex]];
 		});
 
