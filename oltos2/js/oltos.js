@@ -209,6 +209,8 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 
 		$scope.$watch("media", function() {
 		    console.log("displayed media changed!");
+		    // Switch to the first medium
+		    $scope.currentIndex = 0;
 		});
 	    }
 	};
