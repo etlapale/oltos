@@ -12,3 +12,7 @@ d3.v3.min.js
 angular-animate.js
 angular.js
 album.json
+js/jquery.min.js js/jquery-ui.min.js
+css/oltos.css
+js/album.js
+js/jquery*.min.js
