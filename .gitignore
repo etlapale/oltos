@@ -16,3 +16,5 @@ js/jquery.min.js js/jquery-ui.min.js
 css/oltos.css
 js/album.js
 js/jquery*.min.js
+*/js/angular.min.js
+*/js/d3.min.js

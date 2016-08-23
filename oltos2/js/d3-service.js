@@ -9,7 +9,7 @@ angular.module("d3", [])
 	    var tag = $document[0].createElement("script");
 	    tag.type = "text/javascript";
 	    tag.async = true;
-	    tag.src = "js/d3.v3.min.js";
+	    tag.src = "js/d3.min.js";
 	    tag.onreadystatechange = function() {
 		if (this.readyState == "complete") onScriptLoad();
 	    };

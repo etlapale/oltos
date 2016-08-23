@@ -72,7 +72,7 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 		    var monthSelWidth = 20;
 		    var height = 60;
 
-		    var hscale = d3.scale.linear()
+		    var hscale = d3.scaleLinear()
 			.range([0, height-monthSelWidth])
 			.domain([0, d3.max($scope.hist)]);
 
