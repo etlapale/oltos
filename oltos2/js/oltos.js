@@ -23,7 +23,7 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 		    if (date > maxDate)
 			maxDate = date;
 		    if (self.hist[y] === undefined)
-			self.hist[y] = [0,0,0,0,0,0,0,0,0,0,0,0];
+			self.hist[y] = new Array(12).fill(0);
 		    self.hist[y][date.getMonth()]++;
 		    
 		    return medium;
@@ -65,7 +65,7 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 	    },
 	    link: function($scope, $element, $attrs) {
 
-		$scope.hist = [0,0,0,0,0,0,0,0,0,0,0,0];
+		$scope.hist = new Array(12).fill(0);
 
 		d3Promise.then(function(d3) {
 		    var months = "jfmamjjasond";
