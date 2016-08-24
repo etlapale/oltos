@@ -1,5 +1,31 @@
 @import url("font-awesome.min.css");
 
+
+html, body {
+    color: #c3bcae;
+    background: #151818;
+    font-size: 12pt;
+    font-family: sans-serif;
+}
+
+.gallery {
+    margin-top: 2ex;
+    margin-bottom: 2ex;
+    margin-left: auto;
+    margin-right: auto;
+    /*width: 800px;*/
+    width: 70%;
+    background: #393631;
+    padding: 1ex;
+    width: 1100px;
+    border-radius: 8px;
+}
+
+.gallery h1 {
+    margin-top: 0px;
+    font-size: 125%;
+}
+
 .year-nav {
     cursor: pointer;
 }
@@ -23,7 +49,7 @@
 }
 
 .month-label {
-    fill: white;
+    fill: #c3bcae;
     font-size: 10pt;
     cursor: pointer;
     font-variant: small-caps;
