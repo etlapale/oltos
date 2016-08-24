@@ -30,6 +30,11 @@ html, body {
     cursor: pointer;
 }
 
+.preview {
+    text-align: center;
+    margin-top: 1.5ex;
+}
+
 .medium-nav {
     font-size: 300%;
     cursor: pointer;

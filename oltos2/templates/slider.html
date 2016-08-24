@@ -1,16 +1,19 @@
-<!-- Media preview -->
-<img ng-src="preview/{{media[currentIndex].name}}"
-     ng-click="next()"/>
+<div class="preview">
+  <!-- Media preview -->
+  <img ng-src="preview/{{media[currentIndex].name}}"
+       ng-click="next()"/>
 
-<!-- Media metadata -->
-<div>
-  {{currentIndex+1}} / {{media.length}}
-  {{media[currentIndex].name}}
-  {{media[currentIndex].date | date:'yyyy-MM-dd
-  hh:mm:ss'}}
-  <a ng-href="media/{{media[currentIndex].name}}">
-    <span class="fa fa-download"></span>
-  </a>
+  <!-- Media metadata -->
+  <div>
+    {{currentIndex+1}} / {{media.length}}
+    {{media[currentIndex].name}}
+    {{media[currentIndex].date | date:'yyyy-MM-dd
+    hh:mm:ss'}}
+    <a ng-href="media/{{media[currentIndex].name}}">
+      <span class="fa fa-download"></span>
+    </a>
+  </div>
+  
 </div>
 
 <!-- Navigator -->
