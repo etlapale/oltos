@@ -61,20 +61,44 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 	    restruct: "AE",
 	    scope: {
 		hist: "=",
+		yearsDisplayed: "=",
 		onClick: "&"
 	    },
 	    link: function($scope, $element, $attrs) {
-
-		$scope.hist = new Array(12).fill(0);
 
 		d3Promise.then(function(d3) {
 		    var months = "jfmamjjasond";
 		    var monthSelWidth = 20;
 		    var height = 60;
 
+		    console.log("==== hist in histogram is", $scope.hist);
+		    var yearsDisplayed = Object.keys($scope.hist).length;
+
+		    // Search for the maximum number of entries across years
+		    function maxHistCount(hist) {
+			var maxCount = 0;
+			for (var year in hist) {
+			    var ym = d3.max(hist[year]);
+			    if (ym > maxCount)
+				maxCount = ym;
+			}
+			return maxCount;
+		    }
+		    function flatHist(hist) {
+			var ans = [];
+			for (var year in hist)
+			    ans = ans.concat(hist[year]);
+			return ans;
+		    }
+		    var maxCount = maxHistCount($scope.hist);
+		    console.log("    max hist count is", maxCount);
+		    var flat = flatHist($scope.hist);
+		    console.log("    flat hist:", flat);
+
+		    // Histogram scale
 		    var hscale = d3.scaleLinear()
 			.range([0, height-monthSelWidth])
-			.domain([0, d3.max($scope.hist)]);
+			.domain([0, maxCount]);
 
 		    var selectMonth = function(d,i) {
 			$scope.$apply(function() {
@@ -85,7 +109,7 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 		    var svg = d3.select($element[0])
 		      .append("svg")
 			.classed("month-selector", true)
-			.attr("width", 12*monthSelWidth)
+			.attr("width", 12*yearsDisplayed*monthSelWidth)
 			.attr("height", height);
 		    var gall = svg.selectAll("g")
 		        .data($scope.hist);
@@ -127,7 +151,8 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 			.on("click", selectMonth);
 
 		    $scope.$watch("hist", function() {
-			hscale.domain([0, d3.max($scope.hist)]);
+			var maxCount = maxHistCount($scope.hist);
+			hscale.domain([0, maxCount]);
 
 			gall.data($scope.hist);
 			grs.data($scope.hist);
@@ -152,9 +177,13 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 	    templateUrl: "templates/month-selector.html",
 	    scope: {
 		hist: "=",
+		yearsDisplayed: "=",
 		onChange: "&"
 	    },
 	    link: function($scope, $element, $attrs) {
+
+		$scope.yearsDisplayed = ($scope.yearsDisplayed === undefined) ? 3 : $scope.yearsDisplayed;
+		
 		$scope.yearIndex = 0;
 		$scope.monthIndex = 0;
 
@@ -163,19 +192,22 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 		// New histogram set
 		$scope.$watch("hist", function() {
 		    // Go to the last year
+		    console.log("$scope.hist in monthSelector is", $scope.hist);
 		    $scope.years = Object.keys($scope.hist).sort();
-		    $scope.yearIndex = $scope.years.length - 1;
-		    $scope.monthHist = $scope.hist[$scope.years[$scope.yearIndex]];
+		    
+		    $scope.yearIndex = Math.max(0, $scope.years.length - $scope.yearsDisplayed);
+		    
+		    //$scope.hist = $scope.hist[$scope.years[$scope.yearIndex]];
 		});
 
 		$scope.prevYear = function() {
 		    $scope.yearIndex = Math.max($scope.yearIndex - 1, 0);
-		    $scope.monthHist = $scope.hist[$scope.years[$scope.yearIndex]];
+		    //$scope.hist = $scope.hist[$scope.years[$scope.yearIndex]];
 		}
 		$scope.nextYear = function() {
 		    $scope.yearIndex = Math.min($scope.yearIndex + 1,
 						$scope.years.length - 1);
-		    $scope.monthHist = $scope.hist[$scope.years[$scope.yearIndex]];
+		    //$scope.hist = $scope.hist[$scope.years[$scope.yearIndex]];
 		}
 		$scope.monthSelected = function(i) {
 		    $scope.onChange({year: $scope.years[$scope.yearIndex],
