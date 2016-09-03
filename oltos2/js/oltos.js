@@ -61,7 +61,6 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 	    restruct: "AE",
 	    scope: {
 		hist: "=",
-		yearsDisplayed: "=",
 		onClick: "&"
 	    },
 	    link: function($scope, $element, $attrs) {
@@ -91,7 +90,12 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 
 		    var selectMonth = function(d,i) {
 			$scope.$apply(function() {
-			    $scope.onClick({index: i});
+			    console.log($scope.hist);
+			    var years = Object.keys($scope.hist);
+			    console.log("month clicked at", i, "=>",
+					Math.floor(years[i/12]), i%12, Math.floor(i/12), i/12);
+			    $scope.onClick({year: years[Math.floor(i/12)],
+					    month: i%12});
 			});
 		    };
 
@@ -165,13 +169,10 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 	    templateUrl: "templates/month-selector.html",
 	    scope: {
 		hist: "=",
-		yearsDisplayed: "=",
 		onChange: "&"
 	    },
 	    link: function($scope, $element, $attrs) {
 
-		$scope.yearsDisplayed = ($scope.yearsDisplayed === undefined) ? 3 : $scope.yearsDisplayed;
-		
 		$scope.yearIndex = 0;
 		$scope.monthIndex = 0;
 
@@ -182,8 +183,6 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 		    // Go to the last year
 		    console.log("$scope.hist in monthSelector is", $scope.hist);
 		    $scope.years = Object.keys($scope.hist).sort();
-		    
-		    $scope.yearIndex = Math.max(0, $scope.years.length - $scope.yearsDisplayed);
 		    
 		    //$scope.hist = $scope.hist[$scope.years[$scope.yearIndex]];
 		});
@@ -197,9 +196,9 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 						$scope.years.length - 1);
 		    //$scope.hist = $scope.hist[$scope.years[$scope.yearIndex]];
 		}
-		$scope.monthSelected = function(i) {
-		    $scope.onChange({year: $scope.years[$scope.yearIndex],
-				     month: i});
+		$scope.monthSelected = function(y,m) {
+		    console.log("monthSelected(", y, ",", m, ")");
+		    $scope.onChange({year: y, month: m});
 		}
 	    }
 	}
