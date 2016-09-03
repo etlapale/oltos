@@ -74,31 +74,20 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 		    console.log("==== hist in histogram is", $scope.hist);
 		    var yearsDisplayed = Object.keys($scope.hist).length;
 
-		    // Search for the maximum number of entries across years
-		    function maxHistCount(hist) {
-			var maxCount = 0;
-			for (var year in hist) {
-			    var ym = d3.max(hist[year]);
-			    if (ym > maxCount)
-				maxCount = ym;
-			}
-			return maxCount;
-		    }
+		    // Flatten the per-year histogram
 		    function flatHist(hist) {
 			var ans = [];
 			for (var year in hist)
 			    ans = ans.concat(hist[year]);
 			return ans;
 		    }
-		    var maxCount = maxHistCount($scope.hist);
-		    console.log("    max hist count is", maxCount);
 		    var flat = flatHist($scope.hist);
 		    console.log("    flat hist:", flat);
 
 		    // Histogram scale
 		    var hscale = d3.scaleLinear()
 			.range([0, height-monthSelWidth])
-			.domain([0, maxCount]);
+			.domain([0, d3.max(flat)]);
 
 		    var selectMonth = function(d,i) {
 			$scope.$apply(function() {
@@ -112,7 +101,7 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 			.attr("width", 12*yearsDisplayed*monthSelWidth)
 			.attr("height", height);
 		    var gall = svg.selectAll("g")
-		        .data($scope.hist);
+		        .data(flat);
 		    var gmonth = gall.enter().append("g")
 			.classed("month-tick", true)
 			.attr("transform", function (d,i) {
@@ -151,11 +140,10 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 			.on("click", selectMonth);
 
 		    $scope.$watch("hist", function() {
-			var maxCount = maxHistCount($scope.hist);
-			hscale.domain([0, maxCount]);
+			hscale.domain([0, d3.max(flat)]);
 
-			gall.data($scope.hist);
-			grs.data($scope.hist);
+			gall.data(flat);
+			grs.data(flat);
 
 			var transitionDelay = 250;	// [ms]
 
@@ -163,7 +151,7 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 			    .attr("transform", function(d) {
 				return "translate(0,"+(height-monthSelWidth-hscale(d))+")";
 			    });
-			rects.data($scope.hist);
+			rects.data(flat);
 			rects.transition().duration(transitionDelay)
 			    .attr("height", function(d) { return ""+hscale(d)+"px"; });
 		    });
