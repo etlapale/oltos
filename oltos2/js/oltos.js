@@ -123,7 +123,7 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 		    // Month textual label
 		    g.append("text")
 			.classed("month-label", true)
-			.text(function(d,i) { return months[i]; })
+			.text(function(d,i) { return months[i%12]; })
 			.attr("dx", ""+(monthSelWidth/2)+"px")
 			.attr("dy", "2ex")
 			.attr("text-anchor", "middle")
