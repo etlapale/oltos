@@ -92,8 +92,6 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 			$scope.$apply(function() {
 			    console.log($scope.hist);
 			    var years = Object.keys($scope.hist);
-			    console.log("month clicked at", i, "=>",
-					Math.floor(years[i/12]), i%12, Math.floor(i/12), i/12);
 			    $scope.onClick({year: years[Math.floor(i/12)],
 					    month: i%12});
 			});
@@ -142,6 +140,17 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 			.attr("width", ""+monthSelWidth+"px")
 			.attr("height", function(d) { return ""+hscale(d)+"px"; })
 			.on("click", selectMonth);
+
+		    // Year separators
+		    var year_labels = gmonth.append("g")
+			.filter(function(d,i){ return i%12 == 0; })
+			.attr("width", "5em")
+			.append("text")
+			.text(function(d,i){ return Object.keys($scope.hist)[i] ;})
+			.attr("dx", ".5em")
+			.attr("dy", "1.8ex")
+			.attr("class", "year-label");
+			//.on("click", function(d,i){ 
 
 		    $scope.$watch("hist", function() {
 			hscale.domain([0, d3.max(flat)]);
