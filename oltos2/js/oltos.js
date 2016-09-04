@@ -178,6 +178,7 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 	    templateUrl: "templates/month-selector.html",
 	    scope: {
 		hist: "=",
+		yearsDisplayed: "=",
 		onChange: "&"
 	    },
 	    link: function($scope, $element, $attrs) {
@@ -185,25 +186,40 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 		$scope.yearIndex = 0;
 		$scope.monthIndex = 0;
 
-		$scope.years = Object.keys($scope.hist).sort();
-
 		// New histogram set
 		$scope.$watch("hist", function() {
 		    // Go to the last year
 		    console.log("$scope.hist in monthSelector is", $scope.hist);
-		    $scope.years = Object.keys($scope.hist).sort();
+		    console.log("years displayed:", $scope.yearsDisplayed);
+
+		    // Select a portion of years to be shown
+		    var years = Object.keys($scope.hist);
+		    console.log("album extends over", years);
+		    console.log("  selecting", $scope.yearsDisplayed, "years");
+		    if (years.length > $scope.yearsDisplayed)
+			years = years.slice(years.length - $scope.yearsDisplayed);
+		    console.log("  showing years", years);
 		    
 		    //$scope.hist = $scope.hist[$scope.years[$scope.yearIndex]];
+		    $scope.shownHist = {}
+		    years.map(function(year) {
+			$scope.shownHist[year] = $scope.hist[year];
+			console.log("  extending", $scope.shownHist,
+				    "at", year, "with", $scope.hist[year]);
+		    });
+		    console.log("  shown hist: ", $scope.shownHist);
 		});
 
 		$scope.prevYear = function() {
 		    $scope.yearIndex = Math.max($scope.yearIndex - 1, 0);
 		    //$scope.hist = $scope.hist[$scope.years[$scope.yearIndex]];
+		    $scope.shownHist = $scope.hist;
 		}
 		$scope.nextYear = function() {
 		    $scope.yearIndex = Math.min($scope.yearIndex + 1,
 						$scope.years.length - 1);
 		    //$scope.hist = $scope.hist[$scope.years[$scope.yearIndex]];
+		    $scope.shownHist = $scope.hist;
 		}
 		$scope.monthSelected = function(y,m) {
 		    console.log("monthSelected(", y, ",", m, ")");

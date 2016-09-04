@@ -19,6 +19,7 @@ html, body {
     padding: 1ex;
     width: 1100px;
     border-radius: 8px;
+    text-align: center;
 }
 
 .gallery h1 {
