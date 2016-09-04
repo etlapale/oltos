@@ -153,6 +153,9 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 			//.on("click", function(d,i){ 
 
 		    $scope.$watch("hist", function() {
+			flat = flatHist($scope.hist);
+			console.log("    flat hist:", flat);
+			
 			hscale.domain([0, d3.max(flat)]);
 
 			gall.data(flat);
@@ -184,8 +187,18 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 	    link: function($scope, $element, $attrs) {
 
 		$scope.yearIndex = 0;
-		$scope.monthIndex = 0;
 
+		function showYears(years) {
+		    var newHist = {};
+		    years.map(function(year) {
+			newHist[year] = $scope.hist[year];
+			console.log("  extending", newHist,
+				    "at", year, "with", $scope.hist[year]);
+		    });
+		    $scope.shownHist = newHist;
+		    console.log("  shown hist: ", $scope.shownHist);
+		}
+		
 		// New histogram set
 		$scope.$watch("hist", function() {
 		    // Go to the last year
@@ -196,30 +209,37 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 		    var years = Object.keys($scope.hist);
 		    console.log("album extends over", years);
 		    console.log("  selecting", $scope.yearsDisplayed, "years");
+		    
+		    $scope.yearIndex = Math.max(0, years.length - $scope.yearsDisplayed);
+		    console.log("  scope.yearIndex set to", $scope.yearIndex, "from", years.length - $scope.yearsDisplayed, years.length, $scope.yearsDisplayed);
+		    
 		    if (years.length > $scope.yearsDisplayed)
 			years = years.slice(years.length - $scope.yearsDisplayed);
 		    console.log("  showing years", years);
+
 		    
 		    //$scope.hist = $scope.hist[$scope.years[$scope.yearIndex]];
-		    $scope.shownHist = {}
-		    years.map(function(year) {
-			$scope.shownHist[year] = $scope.hist[year];
-			console.log("  extending", $scope.shownHist,
-				    "at", year, "with", $scope.hist[year]);
-		    });
-		    console.log("  shown hist: ", $scope.shownHist);
+		    showYears(years);
 		});
 
 		$scope.prevYear = function() {
-		    $scope.yearIndex = Math.max($scope.yearIndex - 1, 0);
+		    //$scope.yearIndex = Math.max($scope.yearIndex - 1, 0);
 		    //$scope.hist = $scope.hist[$scope.years[$scope.yearIndex]];
-		    $scope.shownHist = $scope.hist;
+		    //$scope.shownHist = $scope.hist;
+		    console.log("prevYear!");
+
+		    if ($scope.yearIndex > 0) {
+			$scope.yearIndex--;
+			var years = Object.keys($scope.hist);
+			years = years.slice($scope.yearIndex, $scope.yearsDisplayed);
+			showYears(years);
+		    }
 		}
 		$scope.nextYear = function() {
-		    $scope.yearIndex = Math.min($scope.yearIndex + 1,
-						$scope.years.length - 1);
+		    /*$scope.yearIndex = Math.min($scope.yearIndex + 1,
+						$scope.years.length - 1);*/
 		    //$scope.hist = $scope.hist[$scope.years[$scope.yearIndex]];
-		    $scope.shownHist = $scope.hist;
+		    //$scope.shownHist = $scope.hist;
 		}
 		$scope.monthSelected = function(y,m) {
 		    console.log("monthSelected(", y, ",", m, ")");
