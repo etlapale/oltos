@@ -231,7 +231,7 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 		    if ($scope.yearIndex > 0) {
 			$scope.yearIndex--;
 			var years = Object.keys($scope.hist);
-			years = years.slice($scope.yearIndex, $scope.yearsDisplayed);
+			years = years.slice($scope.yearIndex, $scope.yearIndex + $scope.yearsDisplayed);
 			showYears(years);
 		    }
 		}
