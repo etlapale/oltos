@@ -240,6 +240,14 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 						$scope.years.length - 1);*/
 		    //$scope.hist = $scope.hist[$scope.years[$scope.yearIndex]];
 		    //$scope.shownHist = $scope.hist;
+
+		    var years = Object.keys($scope.hist);
+		    if ($scope.yearIndex + $scope.yearsDisplayed < years.length) {
+			console.log("Performing nextYear()!");
+			$scope.yearIndex++;
+			years = years.slice($scope.yearIndex, $scope.yearIndex + $scope.yearsDisplayed);
+			showYears(years);
+		    }
 		}
 		$scope.monthSelected = function(y,m) {
 		    console.log("monthSelected(", y, ",", m, ")");
