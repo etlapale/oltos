@@ -36,9 +36,17 @@ html, body {
     margin-top: 1.5ex;
 }
 
-.medium-nav {
-    font-size: 300%;
+.medium-nav, .hist-nav {
+    font-size: 200%;
     cursor: pointer;
+    padding-left: .3em;
+    padding-right: .3em;
+    border-radius: 1.5ex;
+}
+
+.hist-nav:hover {
+    color: white;
+    background: #503d48;
 }
 
 .selector {
@@ -46,7 +54,14 @@ html, body {
 }
 
 .month-selector {
-  background: #504d48;
+    background: #504d48;
+}
+
+month-selector div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
 .month-box {

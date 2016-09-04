@@ -1,13 +1,12 @@
 <div>
-  <div class="year-selector">
-    <a class="year-nav" ng-click="prevYear()">
-      <span class="fa fa-angle-left"></span>
-    </a>
-    <strong>{{years[yearIndex]}}</strong>
-    <a class="year-nav" ng-click="nextYear()">
-      <span class="fa fa-angle-right"></span>
-    </a>
-  </div>
+  <a class="hist-nav previous-year" ng-click="prevYear()">
+    <span class="fa fa-angle-left"></span>
+  </a>
+  
   <histogram hist="shownHist" years-displayed="yearsDisplayed"
 	     on-click="monthSelected(year,month)"></histogram>
+  
+  <a class="hist-nav next-year" ng-click="nextYear()">
+    <span class="fa fa-angle-right"></span>
+  </a>
 </div>
