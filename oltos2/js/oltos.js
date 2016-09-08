@@ -163,6 +163,13 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 
 			var transitionDelay = 250;	// [ms]
 
+			year_labels.attr("opacity", 0.0);
+			year_labels.transition().duration(3*transitionDelay)
+			    .attr("opacity", 1.0);
+			year_labels.text(function(d,i){
+			    return Object.keys($scope.hist)[i];
+			});
+
 			grs.transition().duration(transitionDelay)
 			    .attr("transform", function(d) {
 				return "translate(0,"+(height-monthSelWidth-hscale(d))+")";
