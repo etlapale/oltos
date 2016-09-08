@@ -121,3 +121,39 @@ month-selector div {
 a[href] {
     color: #bd9898;
 }
+
+.selector {
+    margin-left: 5%;
+    margin-right: 5%;
+    overflow: hidden;
+    overflow-x: scroll;
+}
+
+.selector img {
+    margin-left: .2em;
+    margin-right: .2em;
+    opacity: 0.5;
+    border: 1px solid #393631;
+    cursor: pointer;
+}
+
+.selector img:hover {
+    opacity: 1;
+    border: 1px solid #bd9898;
+}
+
+::-webkit-scrollbar {
+    height: 12px;
+    width: 12px;
+    background: #393631;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #bd9898;
+    -webkit-border-radius: 1ex;
+    -webkit-box-shadow: 0px 1px 2px #bd9898;
+}
+
+::-webkit-scrollbar-corner {
+    background: #bd9898;
+}
