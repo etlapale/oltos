@@ -282,6 +282,14 @@ var sliderApp = angular.module('sliderApp', ["d3"])
 		$scope.prev = function() {
 		    setCurrentIndex($scope.currentIndex - 1);
 		};
+		$scope.mediaSelected = function(medium) {
+		    console.log("media selected: ", medium);
+		    var i;
+		    for (i = 0; i < $scope.media.length
+			 && $scope.media[i] != medium; i++);
+		    setCurrentIndex(i);
+		    
+		};
 
 		//setCurrentIndex(0);
 		$scope.currentIndex = 0;
